@@ -1,0 +1,48 @@
+{% extends "blog/layout.html" %}
+
+{% block content %}
+<div class="upage vertical-col left" id="mainpage">
+            <div class="grid  urow  row-height-1"  >
+                <div class="col  col-0_12-12"  >
+                    <div class="-container content-area vertical-col">
+                        <div><h2>{{ post.heading}}</h2></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="" >
+                <div class="col  col-md-12"  >
+                         <p>{{post.body}}</p>
+
+                </div>
+
+            </div>
+
+            <div class="grid  row-height-3">
+                <div class="col  col-0_12-12"  >
+                    <div class="-container content-area vertical-col">
+
+                        <div class="list-group  "  >
+                            {% for comment in post.comment_set.all %}
+                            <a class="list-group-item allow-badge  " >
+
+                                <p class="list-group-item-text">{{ comment.com_date }}</p>
+                                <h4 class="list-group-item-heading">{{ comment.comment }}</h4>
+                            </a>
+                            {% endfor %}
+                        </div>
+                        <form class="" action="{% url 'comment' post.id %}" method="post">
+                            {% csrf_token %}
+                        <div class="" >
+                            <label class="label-top-left">Add a Comment</label>
+                            <textarea  name="comment" class="form-control" wrap="soft" placeholder="Your comment"></textarea>
+                        </div>
+                        <button  class="btn    btn-default" type="submit" >Submit</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+{% endblock %}

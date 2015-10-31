@@ -1,0 +1,29 @@
+__author__ = 'brian'
+from . import views
+from django.conf.urls import url
+from blog.forms import BootstrapAuthenticationForm
+from datetime import datetime
+
+urlpatterns = [
+    url(r'^$', views.index, name='index'),
+    url(r'^(?P<post_id>[0-9]+)/$', views.post, name='post'),
+    url(r'(?P<post_id>[0-9]+)/comment/$', views.comment, name='comment'),
+    url(r'^login/$',
+        'django.contrib.auth.views.login',
+        {
+            'template_name': 'blog/login.html',
+            'authentication_form': BootstrapAuthenticationForm,
+            'extra_context':
+                {
+                    'title': 'Log in',
+                    'year': datetime.now().year,
+                },
+        },
+        name='login'),
+    url(r'^logout$',
+        'django.contrib.auth.views.logout',
+        {
+            'next_page': '/blog',
+        },
+        name='logout'),
+]

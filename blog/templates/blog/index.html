@@ -1,0 +1,64 @@
+{% extends "blog/layout.html" %}
+
+{% block content %}
+
+<div class="jumbotron">
+    <h1 class="text-center">Welcome to my blog</h1>
+
+
+</div>
+
+    {% if latest_post %}
+    {% for foo in latest_post %}
+
+
+        <div class=" vertical-col left" id="main">
+            <div class="grid grid-pad  row-height-4"  data-ver="0">
+                <div class="col  col-0_12-12"  data-ver="0">
+                    <div class="content-area vertical-col">
+
+                        <div class="panel panel-default" >
+                            <div class="panel-heading">
+                                    <a href="{% url 'post' foo.id %}"><h4> {{foo.heading }}</h4></a>
+                                <di><span>{{ foo.pub_date }}</span> <span>{{ foo.creator }}</span></di>
+
+                            </div>
+                            <div class="col">
+
+                                     <p>{{ foo.body }}</p>
+
+                            </div>
+
+                        </div>
+                        <div class="panel widget  panel-default"  data-ver="1">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                      <a class="accordion-toggle"  href="#bs-accordion-group-1">{{ foo.comment_set.count }} Comments</a>
+                                </h4>
+                            </div>
+                            <div id="bs-accordion-group-1" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="col  single-col"  data-ver="0">
+                                        <div class="widget-container content-area vertical-col">
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+
+    {% endfor %}
+{% endif %}
+
+
+{% endblock %}
+
+
+
+
