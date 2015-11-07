@@ -6,6 +6,8 @@ from datetime import datetime
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
+    url(r'^about/$', views.about, name='about'),
+    url(r'^contact/$', views.contact, name='contact'),
     url(r'^(?P<post_id>[0-9]+)/$', views.post, name='post'),
     url(r'(?P<post_id>[0-9]+)/comment/$', views.comment, name='comment'),
     url(r'^login/$',
