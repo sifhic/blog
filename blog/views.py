@@ -27,3 +27,17 @@ def comment(request, post_id):
     p.comment_set.add(c)
     p.save()
     return HttpResponseRedirect(reverse('post',args=(post_id,)))
+
+def about(request):
+    context={
+        'title':'About',
+        'message':'This is the about page'
+    }
+    return render(request,'blog/about.html',context)
+
+def contact(request):
+    context={
+        'title':'Contacts',
+        'message':'This is the Contacts page'
+    }
+    return render(request,'blog/contact.html',context)
