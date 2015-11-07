@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }} - My Django Application</title>
     {% load staticfiles %}
-    <link rel="stylesheet" type="text/css" href="{% static 'blog/content/bootstrap.min.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'blog/content/site.css' %}" />
-    <script src="{% static 'blog/scripts/modernizr-2.6.2.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'content/bootstrap.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/site.css' %}" />
+    <script src="{% static 'scripts/modernizr-2.6.2.js' %}"></script>
 </head>
 
 <body>
@@ -24,8 +24,8 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a href="{% url 'index' %}">Home</a></li>
-                    <li><a href="{% url 'index' %}">About</a></li>
-                    <li><a href="{% url 'index' %}">Contact</a></li>
+                    <li><a href="{% url 'about' %}">About</a></li>
+                    <li><a href="{% url 'contact' %}">Contact</a></li>
                 </ul>
                 {% include 'blog/loginpartial.html' %}
             </div>
@@ -40,9 +40,9 @@
         </footer>
     </div>
 
-    <script src="{% static 'blog/scripts/jquery-1.10.2.min.js' %}"></script>
-    <script src="{% static 'blog/scripts/bootstrap.min.js' %}"></script>
-    <script src="{% static 'blog/scripts/respond.min.js' %}"></script>
+    <script src="{% static 'scripts/jquery-1.10.2.min.js' %}"></script>
+    <script src="{% static 'scripts/bootstrap.min.js' %}"></script>
+    <script src="{% static 'scripts/respond.min.js' %}"></script>
 {% block scripts %}{% endblock %}
 
 </body>
