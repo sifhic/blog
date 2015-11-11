@@ -12,7 +12,7 @@ class PostAdmin(admin.ModelAdmin):
     fieldsets = [
         ('creator',{'fields':['creator']}),
         (None,  {'fields' : ['heading','body']}),
-        ('Date Info',{'fields':['pub_date'],'classes':['collapse']})
+
     ]
     inlines = [CommentAdmin]
     list_filter = ['pub_date']
