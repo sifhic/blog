@@ -9,11 +9,11 @@ class Post(models.Model):
     creator=models.ForeignKey(User)
     heading=models.CharField(max_length=200)
     body=models.TextField()
-    pub_date=models.DateTimeField('date published')
+    pub_date=models.DateTimeField('date published', auto_now_add=True)
 
 class Comment(models.Model):
     def __str__(self):
         return self.comment
     comment=models.CharField(max_length=400)
     post_id=models.ForeignKey(Post)
-    com_date=models.DateTimeField('date commented')
+    com_date=models.DateTimeField('date commented', auto_now_add=True)
