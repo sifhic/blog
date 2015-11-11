@@ -57,7 +57,7 @@ TEMPLATES = [
         'DIRS': [os.path.join(BASE_DIR, 'templates'),],
         'APP_DIRS': True,
         'OPTIONS': {
-            'TEMPLATE_DEBUG':True,
+            #'TEMPLATE_DEBUG':True,
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
