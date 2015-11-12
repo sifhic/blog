@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -21,7 +22,6 @@ SECRET_KEY = 'y#9r1u$hxrm!u*%^04ia^+tzrh3c7mxgrf29!ln-*20xo()x4$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 
 ALLOWED_HOSTS = []
 
@@ -36,7 +36,17 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blog',
+    'tinymce',
 )
+# tinymce configurations
+TINYMCE_DEFAULT_CONFIG = {
+    'plugins': "table,spellchecker,paste",
+    'theme': "advanced",
+    'cleanup_on_startup': True,
+    'custom_undo_redo_levels': 5,
+}
+TINYMCE_SPELLCHECKER = True
+#TINYMCE_COMPRESSOR = True
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -54,7 +64,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates'),],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), ],
         'APP_DIRS': True,
         'OPTIONS': {
             #'TEMPLATE_DEBUG':True,
