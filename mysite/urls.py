@@ -11,6 +11,6 @@ urlpatterns = patterns('',
 
     url(r'^blog/',include('blog.urls'),name='blog'),
     url(r'^$',views.index),
-
+    url(r'^tinymce/',include('tinymce.urls')),
     url(r'^admin/', include(admin.site.urls)),
 )
