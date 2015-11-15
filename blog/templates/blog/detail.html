@@ -30,7 +30,7 @@
                             </a>
                             {% endfor %}
                         </div>
-                        <form class="" action="{% url 'comment' post.id %}" method="post">
+                        <form class="" action="{% url 'blog:comment' post.id %}" method="post">
                             {% csrf_token %}
                         <div class="" >
                             <label class="label-top-left">Add a Comment</label>
