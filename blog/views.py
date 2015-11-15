@@ -2,14 +2,20 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse,HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.utils import timezone
+from datetime import datetime
 
 from .models import Post,Comment
-
+def year():
+    return datetime.now().year
 
 # Create your views here.
 def index(request):
     latest_post = Post.objects.order_by('pub_date')[:5]
-    context = {'latest_post': latest_post,'title':'Home'}
+    context = {
+        'latest_post': latest_post,
+        'title':'Home',
+        'year':year()
+    }
     return render(request, 'blog/index.html', context)
 
 def post(request, post_id):
@@ -31,6 +37,7 @@ def comment(request, post_id):
 def about(request):
     context={
         'title':'About',
+        'year':year(),
         'message':'This is the about page'
     }
     return render(request,'blog/about.html',context)
@@ -38,6 +45,7 @@ def about(request):
 def contact(request):
     context={
         'title':'Contacts',
+        'year':year(),
         'message':'This is the Contacts page'
     }
     return render(request,'blog/contact.html',context)
