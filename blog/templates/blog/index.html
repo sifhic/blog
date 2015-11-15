@@ -2,11 +2,11 @@
 
 {% block content %}
 
-<div class="jumbotron">
-    <h1 class="text-center">Welcome to my blog</h1>
+    <div class="jumbotron">
+        <h1 class="text-center">Welcome to my blog</h1>
 
 
-</div>
+    </div>
 
     {% if latest_post %}
     {% for foo in latest_post %}
@@ -24,14 +24,12 @@
                                 <div>
                                     <span>{{ foo.pub_date }}</span>
                                     <span>{{ foo.creator }}</span>
-                                </di>
+                                </div>
 
                             </div>
                             <div class="panel-body">
                                 {{ foo.body|safe }}
                             </div>
-
-                        </div>
                         <div class="panel panel-default" >
                             <div class="panel-heading">
                                 <h4 class="panel-title">
@@ -58,10 +56,11 @@
                 
             </div>
         </div>
+        </div>
 
 
     {% endfor %}
-{% endif %}
+    {% endif %}
 
 
 {% endblock %}
