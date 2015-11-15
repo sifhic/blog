@@ -1,9 +1,16 @@
 {% if user.is_authenticated %}
-<form id="logoutForm" action="/blog/logout" method="post" class="navbar-right">
+<form id="logoutForm" action="{% url 'blog:logout' %}" method="post" class="navbar-right">
     {% csrf_token %}
     <ul class="nav navbar-nav navbar-right">
-        <li> <span class="navbar-brand"><a href="/admin"> {{ user.username }}</a></span></li>
-        <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+
+
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ user.username }}<b class="caret"></b> </a>
+            <ul class="dropdown-menu">
+                <li><a href="{% url 'admin:index' %}">Admin site</a></li>
+                <li><a href="javascript:document.getElementById('logoutForm').submit()">Logout</a> </li>
+            </ul>
+        </li>
     </ul>
 
 </form>
