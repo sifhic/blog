@@ -32,7 +32,7 @@ def comment(request, post_id):
     c.comment=request.POST['comment']
     p.comment_set.add(c)
     p.save()
-    return HttpResponseRedirect(reverse('post',args=(post_id,)))
+    return HttpResponseRedirect(reverse('blog:post',args=(post_id,)))
 
 def about(request):
     context={
