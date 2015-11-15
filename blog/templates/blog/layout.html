@@ -31,13 +31,13 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a href="{% url 'index' %}" class="navbar-brand">Simple Blog</a>
+                <a href="{% url 'blog:index' %}" class="navbar-brand">Simple Blog</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="{% url 'index' %}">Home</a></li>
-                    <li><a href="{% url 'about' %}">About</a></li>
-                    <li><a href="{% url 'contact' %}">Contact</a></li>
+                    <li><a href="{% url 'blog:index' %}">Home</a></li>
+                    <li><a href="{% url 'blog:about' %}">About</a></li>
+                    <li><a href="{% url 'blog:contact' %}">Contact</a></li>
                 </ul>
                 {% include 'blog/loginpartial.html' %}
             </div>
@@ -48,7 +48,7 @@
 {% block content %}{% endblock %}
         <hr/>
         <footer>
-            <p>&copy; {{ year }} - My Django Blog</p>
+            <p>Nyaundi Brian. &copy; {{ year }} - My Django Blog</p>
         </footer>
     </div>
 
