@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, OperationalError
 from django.db.models.signals import post_save
 from django.contrib.auth.admin import User
 from django.dispatch import receiver
@@ -17,9 +17,16 @@ class GitHubKenyansWatcher(models.Model):
 class GitHubApi(object):
 
     api_host = "https://api.github.com"
-    api_account = GitHubKenyansWatcher.objects.get(pk=1)
 
-    auth_header = {'Authorization': 'token %s' % api_account.token}
+    try:
+        api_account = GitHubKenyansWatcher.objects.get(pk=1)
+    except OperationalError:
+        api_account = None
+        auth_header=''
+        auth_name=''
+    else:
+        auth_header = {'Authorization': 'token %s' % api_account.token}
+        auth_name=api_account.username
 
 
     def response(self, request):
@@ -56,7 +63,7 @@ class GitHubApi(object):
         return self.get('/user/'+username)
 
     def activities(self):
-        return self.get('/users/'+self.api_account.username+'/received_events')
+        return self.get('/users/'+self.auth_name+'/received_events')
 
 
 class Location(models.Model):
@@ -114,5 +121,4 @@ class GitHubUser(models.Model):
     def open(self):
         self.is_open = True
         self.save()
-
 
