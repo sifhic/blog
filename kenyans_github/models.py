@@ -1,69 +1,70 @@
+from pprint import pprint
+
 from django.db import models, OperationalError
 from django.db.models.signals import post_save
 from django.contrib.auth.admin import User
 from django.dispatch import receiver
 import os
 import json
-import urllib.request,urllib.parse,urllib.error
+import urllib.request, urllib.parse, urllib.error
+
+
 # Create your models here.
 
 
 class GitHubKenyansWatcher(models.Model):
     user = models.OneToOneField(User, unique=True)
     token = models.CharField(max_length=100, null=False)
-    username = models.CharField(max_length=50,null=False)
+    username = models.CharField(max_length=50, null=False)
 
 
 class GitHubApi(object):
-
     api_host = "https://api.github.com"
 
     try:
         api_account = GitHubKenyansWatcher.objects.get(pk=1)
     except OperationalError:
         api_account = None
-        auth_header=''
-        auth_name=''
+        auth_header = ''
+        auth_name = ''
     else:
         auth_header = {'Authorization': 'token %s' % api_account.token}
-        auth_name=api_account.username
-
+        auth_name = api_account.username
 
     def response(self, request):
         try:
             response = urllib.request.urlopen(request)
         except urllib.error.URLError as e:
-            if hasattr(e,'reason'):
+            if hasattr(e, 'reason'):
                 print('Failed to reach a server')
                 print('Reason ', e.reason)
-            elif hasattr(e,'code'):
+            elif hasattr(e, 'code'):
                 print('Server couldn\'t fullfill the request')
                 print('Error code ', e.code)
+            return None
 
         else:
-            #response.info().header
+            # response.info().header
             return response.read().decode()
 
     def put(self, endpoint):
-        request = urllib.request.Request(self.api_host+endpoint, None, self.auth_header, method='PUT')
+        request = urllib.request.Request(self.api_host + endpoint, None, self.auth_header, method='PUT')
         return self.response(request)
 
     def delete(self, endpoint):
-        request = urllib.request.Request(self.api_host+endpoint, None, self.auth_header, method='DELETE')
+        request = urllib.request.Request(self.api_host + endpoint, None, self.auth_header, method='DELETE')
         return self.response(request)
 
-
-    def get(self,endpoint):
-        #request = urllib.request.Request(endpoint)
-        #request.add_header('Authorization', 'token %s' % token)
-        return self.response(urllib.request.Request(self.api_host+endpoint, None, self.auth_header))
-
+    def get(self, endpoint):
+        # request = urllib.request.Request(endpoint)
+        # request.add_header('Authorization', 'token %s' % token)
+        return self.response(urllib.request.Request(self.api_host + endpoint, None, self.auth_header))
 
     def get_user(self, username):
-        return self.get('/user/'+username)
+        return self.get('/user/' + username)
 
     def activities(self):
-        return self.get('/users/'+self.auth_name+'/received_events')
+        return self.get('/users/' + self.auth_name + '/received_events')
 
 
 class Location(models.Model):
@@ -74,22 +75,28 @@ class Location(models.Model):
         return self.name
 
     def update_users(self):
-        api=GitHubApi()
-        q=urllib.parse.urlencode({'q':'location:'+self.name})
-        data=json.loads(api.get('/search/users?'+q))#todo check if response
+        api = GitHubApi()
+        q = urllib.parse.urlencode({'q': 'location:' + self.name})
+        res = api.get('/search/users?' + q)
+        if res is not None:
+            data = json.loads(res)  # todo check if response
 
-        #with open(os.path.dirname(__file__) + '/seacrhlocation', encoding='utf-8') as rec_events:
-        #    data = json.loads(rec_events.read())
+            # with open(os.path.dirname(__file__) + '/seacrhlocation', encoding='utf-8') as rec_events:
+            #    data = json.loads(rec_events.read())
 
-        for i in data['items']:
-            gu= GitHubUser()
-            gu.username=i['login']
-            gu.location_id=self
-            print(gu,end='\n')
-            gu.save()
+            for i in data['items']:
+                gu = GitHubUser()
+                gu.username = i['login']
+                gu.location_id = self.pk
+                #pprint(gu)
+                gu.follow()
+                gu.save()
 
-        self.count = data['total_count']
-        self.save()
+            self.count = data['total_count']
+            post_save.disconnect(update_location_users,Location)
+            self.save()
+            post_save.connect(update_location_users,Location)
+
 
 @receiver(post_save, sender=Location)
 def update_location_users(sender, instance, **kwargs):
@@ -97,7 +104,7 @@ def update_location_users(sender, instance, **kwargs):
 
 
 class GitHubUser(models.Model):
-    username = models.CharField(max_length=100,unique=True)
+    username = models.CharField(max_length=100, unique=True)
     location = models.ForeignKey(Location)
     is_open = models.BooleanField(default=True)
 
@@ -105,14 +112,14 @@ class GitHubUser(models.Model):
         return self.username
 
     def follow(self):
-        #PUT /user/following/:username
-        api=GitHubApi()
-        api.put('/user/following/'+self.username)
+        # PUT /user/following/:username
+        api = GitHubApi()
+        api.put('/user/following/' + self.username)
 
     def un_follow(self):
-        #DELETE /user/following/:username
-        api=GitHubApi()
-        api.delete('/user/following/'+self.username)
+        # DELETE /user/following/:username
+        api = GitHubApi()
+        api.delete('/user/following/' + self.username)
 
     def close(self):
         self.is_open = False
@@ -121,4 +128,3 @@ class GitHubUser(models.Model):
     def open(self):
         self.is_open = True
         self.save()
-
