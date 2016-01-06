@@ -84,18 +84,21 @@ class Location(models.Model):
             # with open(os.path.dirname(__file__) + '/seacrhlocation', encoding='utf-8') as rec_events:
             #    data = json.loads(rec_events.read())
 
-            for i in data['items']:
-                gu = GitHubUser()
-                gu.username = i['login']
-                gu.location_id = self.pk
-                #pprint(gu)
-                gu.follow()
-                gu.save()
+            if data['total_count'] > 0:
+                self.count = data['total_count']
+                post_save.disconnect(update_location_users,Location)
+                self.save()
+                post_save.connect(update_location_users,Location)
 
-            self.count = data['total_count']
-            post_save.disconnect(update_location_users,Location)
-            self.save()
-            post_save.connect(update_location_users,Location)
+                for i in data['items']:
+                    gu = GitHubUser()
+                    gu.username = i['login']
+                    gu.location_id = self.id
+                    #pprint(gu)
+                    gu.follow()
+                    gu.save()
+
+
 
 
 @receiver(post_save, sender=Location)
