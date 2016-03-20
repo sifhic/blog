@@ -1,10 +1,40 @@
 {% extends "blog/layout.html" %}
 
 {% block content %}
+    <!-- Page Header -->
+    <!-- Set your background image for this header on the line below. -->
+    <header class="intro-header" style="background-image: url('/static/img/about-bg.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="page-heading">
+                        <h1>About Me</h1>
+                        <hr class="small">
+                        <span class="subheading">This is what I do.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
 
-<h2>{{ title }}.</h2>
-<h3>{{ message }}</h3>
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <p>
+                    I am a curious and ambition young professional in love with 
+                    programing and the Computers. I am particularly good at 
+                    understanding problems and providing simple and effective solutions. 
+                </p>
+                <p>
+                    I am in a search for a company that has team-based culture 
+                    and can provide me with ongoing development for my good organizational, 
+                    analytical and technical skills.
+                </p>
+            </div>
+        </div>
+    </div>
 
-<p>Use this area to provide additional information.</p>
+    <hr>
 
 {% endblock %}

@@ -2,71 +2,66 @@
 
 {% block content %}
 
-    <div class="jumbotron">
-        <h1 class="text-center">Welcome to my blog</h1>
 
-
-    </div>
-
-    {% if latest_post %}
-    {% for foo in latest_post %}
-
-        <div class=" vertical-col left" id="main">
-            <div class="grid grid-pad  row-height-4"  >
-                <div class="col  col-0_12-12"  >
-                    <div class="content-area vertical-col">
-
-                        <div class="panel panel-default" >
-                            <div class="panel-heading">
-                                <a href="{% url 'blog:post' foo.id %}">
-                                    <h4> {{foo.heading }}</h4>
-                                </a>
-                                <div>
-                                    <span>{{ foo.pub_date }}</span>
-                                    <span>{{ foo.creator }}</span>
-                                </div>
-
-                            </div>
-                            <div class="panel-body">
-                                {{ foo.body|safe }}
-                            </div>
-                        <div class="panel panel-default" >
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                      <a class="accordion-toggle" data-toggle="collapse"  href="#{{ foo.id }}">{{ foo.comment_set.count }}View Comments</a>
-                                </h4>
-                            </div>
-                            <div id="{{ foo.id }}" class="panel-collapse collapse">
-                                <div class="panel-body pbc">
-                                    <div class="col">
-                                            <div  class="list-group ">
-                                                {% for comment in foo.comment_set.all %}
-                                                <a class="list-group-item allow-badge " >
-                                                    <p class="list-group-item-text">{{ comment.com_date }}</p>
-                                                    <h4 class="list-group-item-heading">{{ comment.comment }}</h4>
-                                                </a>
-                                                {% endfor %}
-                                            </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+<!-- Page Header -->
+    <!-- Set your background image for this header on the line below. -->
+    <header class="intro-header" style="background-image: url('/static/img/home-bg.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="site-heading">
+                        <h1>CodeFreak</h1>
+                        <hr class="small">
+                        <span class="subheading">Human Beings are Intelligent, Computers are just faster.</span>
                     </div>
                 </div>
-                
             </div>
         </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                {% if latest_post %}
+                    {% for post in latest_post %}
+                
+                <div class="post-preview">
+                    <a href="{% url 'blog:post' post.id %}">
+                        <h2 class="post-title">
+                            {{post.heading }}
+                        </h2>
+                        <h3 class="post-subtitle">
+                            Problems look mighty small from 150 miles up
+                        </h3>
+                    </a>
+                    <p class="post-meta">Posted by <a href="#">{{post.creator}}</a> on {{post.pub_date}}</p>
+                </div>
+                <hr>
+                    {% endfor %}
+                {% else %}
+                <div class="post-preview">
+                    <a href="#">
+                        <h2 class="post-title">
+                            No posts yet
+                        </h2>
+                        <h3 class="post-subtitle">
+                            Please check back later or contact Me.
+                        </h3>
+                    </a>
+                    
+                </div>
+                {% endif %}
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    <li class="next">
+                        <a href="#">Older Posts &rarr;</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-
-
-    {% endfor %}
-        {% else %}
-        <h3 class="text-center">No posts yet.</h3>
-    {% endif %}
-
-
+    </div>
+    
 {% endblock %}
-
-
-
-

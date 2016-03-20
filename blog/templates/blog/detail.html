@@ -1,46 +1,30 @@
 {% extends "blog/layout.html" %}
 
-{% block content %}
-<div class="upage vertical-col left" id="mainpage">
-            <div class="grid  urow  row-height-1"  >
-                <div class="col  col-0_12-12"  >
-                    <div class="-container content-area vertical-col">
-                        <div><h2>{{ post.heading}}</h2></div>
+{% block content %}    
+    <!-- Page Header -->
+    <!-- Set your background image for this header on the line below. -->
+    <header class="intro-header" style="background-image: url('/static/img/post-bg.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>{{ post.heading}}</h1>
+                        <h2 class="subheading">Problems look mighty small from 150 miles up</h2>
+                        <span class="meta">Posted by <a href="#">{{post.creator}}</a> on August 24, 2014</span>
                     </div>
                 </div>
-            </div>
-
-            <div class="" >
-                <div class="col  col-md-12"  >
-                     <p>{{post.body|safe}}</p>
-                </div>
-
-            </div>
-
-            <div class="grid  row-height-3">
-                <div class="col  col-0_12-12"  >
-                    <div class="-container content-area">
-
-                        <div class="list-group" >
-                            {% for comment in post.comment_set.all %}
-                            <a class="list-group-item allow-badge " >
-
-                                <p class="list-group-item-text">{{ comment.com_date }}</p>
-                                <h4 class="list-group-item-heading">{{ comment.comment }}</h4>
-                            </a>
-                            {% endfor %}
-                        </div>
-                        <form class="" action="{% url 'blog:comment' post.id %}" method="post">
-                            {% csrf_token %}
-                        <div class="" >
-                            <label class="label-top-left">Add a Comment</label>
-                            <textarea  name="comment" class="form-control" wrap="soft" placeholder="Your comment"></textarea>
-                        </div>
-                        <button  class="btn btn-default" type="submit" >Submit</button>
-                        </form>
-                    </div>
-                </div>
-
             </div>
         </div>
+    </header>
+
+    <!-- Post Content -->
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    {{post.body|safe}}
+                </div>
+            </div>
+        </div>
+    </article>
 {% endblock %}
