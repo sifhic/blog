@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse,HttpResponseRedirect
+from django.core.mail import send_mail, BadHeaderError
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 from datetime import datetime
@@ -10,7 +11,7 @@ def year():
 
 # Create your views here.
 def index(request):
-    latest_post = Post.objects.order_by('pub_date')[:5]
+    latest_post = Post.objects.filter(is_published=True).order_by('pub_date')[:5]
     context = {
         'latest_post': latest_post,
         'title':'Home',
@@ -49,3 +50,21 @@ def contact(request):
         'message':'This is the Contacts page'
     }
     return render(request,'blog/contact.html',context)
+    
+def send_email(request):
+    subject = request.POST.get('subject', '')
+    name = request.POST.get('name', '')
+    phone = request.POST.get('phone', '')
+    message = request.POST.get('message', '')
+    from_email = request.POST.get('from_email', '')
+    if name and message and from_email:
+        try:
+            send_mail(subject, message, from_email, ['ndieksman@gmail.com'])
+        except BadHeaderError:
+            #return HttpResponseRedirect('/blog/contact')
+            pass
+        return HttpResponse('1')
+    else:
+        # In reality we'd use a form class
+        # to get proper validation errors.
+        return HttpResponse('Make sure all fields are entered and valid.')
