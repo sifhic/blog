@@ -29,6 +29,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
+    'suit',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -36,7 +37,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blog',
-    'tinymce',
+    'suit_ckeditor',
+    #'tinymce',
     #'rog'
 )
 # tinymce configurations
@@ -74,10 +76,12 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                "django.core.context_processors.request",
             ],
         },
     },
 ]
+
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
@@ -107,7 +111,15 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(BASE_DIR, 'static').replace('\\', '/')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static_libs').replace('\\', '/'),
-
-
 ]
 STATIC_URL = '/static/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/')
+MEDIA_URL = '/media/'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_PASSWORD = '##############'
+EMAIL_HOST_USER = 'ndieksman@gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
