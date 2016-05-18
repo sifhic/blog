@@ -38,7 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'blog',
     'suit_ckeditor',
-    #'tinymce',
+    #'pa',
     #'rog'
 )
 # tinymce configurations
