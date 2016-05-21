@@ -40,18 +40,12 @@ INSTALLED_APPS = (
     'blog',
     'suit_ckeditor',
     'pa',
-    #'rog'
+    'rog',
 )
-# tinymce configurations
-TINYMCE_DEFAULT_CONFIG = {
-    'plugins': "table,spellchecker,paste",
-    'theme': "advanced",
-    'cleanup_on_startup': True,
-    'custom_undo_redo_levels': 5,
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
+    'PAGE_SIZE': 10
 }
-TINYMCE_SPELLCHECKER = True
-#TINYMCE_COMPRESSOR = True
-
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
