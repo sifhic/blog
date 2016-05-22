@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'corsheaders',
     'blog',
     'suit_ckeditor',
     'pa',
@@ -58,6 +59,8 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'mysite.urls'
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 TEMPLATES = [
     {
