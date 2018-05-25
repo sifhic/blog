@@ -11,7 +11,7 @@ def year():
 
 # Create your views here.
 def index(request):
-    latest_post = Post.objects.filter(is_published=True).order_by('pub_date')[:5]
+    latest_post = Post.objects.filter(is_published=True).order_by('-pub_date')[:5]
     context = {
         'latest_post': latest_post,
         'title':'Home',
