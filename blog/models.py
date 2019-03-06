@@ -11,7 +11,7 @@ class Post(models.Model):
     sub_heading=models.CharField(max_length=300)
     body=models.TextField()
     is_published = models.BooleanField(default=0)
-    featured_image = models.ImageField(upload_to='featured_images')
+    featured_image = models.ImageField(upload_to='featured_images',blank=True)
     pub_date=models.DateTimeField('date published', auto_now_add=True)
     
 # Create your models here.
