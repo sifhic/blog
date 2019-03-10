@@ -1,0 +1,74 @@
+{% extends "blog/layout_post.html" %}
+
+{% block post %}
+
+    <article class="card mb-4">
+        <header class="card-header text-center">
+            <div class="card-meta">
+                By <a href="#">{{ post.creator }}</a> on
+                <time class="timeago" datetime="2017-10-26 20:00">{{ post.created_at|date }}</time>
+                in <a href="page-category.html">{{ post.category }}</a>
+            </div>
+            <a href="post-image.html">
+                <h1 class="card-title">{{ post.heading }}</h1>
+            </a>
+        </header>
+        <a href="post-image.html">
+            <img class="card-img" src="img/articles/1.jpg" alt=""/>
+        </a>
+        <div class="card-body">
+
+            {{ post.body|safe }}
+
+            <hr/>
+
+            <h3>{{ post.comment_set.count }} comments</h3>
+            {% for comment in post.comment_set.all %}
+
+                <div class="media mb-3">
+                    <div class="text-center">
+                        <img class="mr-3 rounded-circle" src="https://milo.bootlab.io/img/avatars/3.png" alt="Lucy"
+                             width="100" height="100">
+                        <h6 class="mt-1 mb-0 mr-3">Lucy</h6>
+                    </div>
+                    <div class="media-body">
+                        <p class="mt-3 mb-2">{{ comment.text }}</p>
+                        <time class="timeago text-muted" datetime="2017-12-03 20:00">3 december 2017</time>
+                        <a class="float-right" href="#"><span class="fa fa-reply"></span> Reply</a>
+                        {% for reply in comment_set.replies.all %}
+                            <div class="media mt-3">
+                                <div class="pr-3 text-center">
+                                    <img class="mr-3 rounded-circle" src="https://milo.bootlab.io/img/avatars/2.png"
+                                         alt="John" width="100" height="100">
+                                    <h6 class="mt-1 mb-0 mr-3">John</h6>
+                                </div>
+                                <div class="media-body">
+                                    <p class="mt-3 mb-2">{{ reply.text }}</p>
+                                    <time class="timeago text-muted" datetime="2017-12-14 19:00">14 december 2017</time>
+                                    <a class="float-right" href="#"><span class="fa fa-reply"></span> Reply</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+
+
+            <div class="mt-5">
+                <h5>Write a response</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Your name">
+                    </div>
+                    <div class="col-md-6">
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Your email">
+                    </div>
+                </div>
+                <textarea class="form-control mt-3" rows="3" placeholder="Write a response.."></textarea>
+                <a href="#" class="btn btn-success mt-3">Publish</a>
+            </div>
+
+        </div>
+    </article><!-- /.card -->
+
+{% endblock %}

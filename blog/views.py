@@ -1,28 +1,83 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404,redirect
 from django.http import HttpResponse,HttpResponseRedirect
 from django.core.mail import send_mail, BadHeaderError
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils import timezone
 from datetime import datetime
 
-from .models import Post,Comment
-def year():
-    return datetime.now().year
+from blog.models import Post,Comment,Category
+from blog.forms import PostForm,CategoryForm
+
+
+import logging
+lgr = logging.getLogger(__name__)
+
+
 
 # Create your views here.
-def index(request):
-    latest_post = Post.objects.filter(is_published=True).order_by('-pub_date')[:5]
+def post_list(request):
+    posts = Post.objects.filter(site=request.site,is_published=True) .order_by('-created_at')[:5]
     context = {
-        'latest_post': latest_post,
+        'posts': posts,
         'title':'Home',
-        'year':year()
     }
-    return render(request, 'blog/index.html', context)
+    return render(request, 'blog/post/list.html', context)
 
-def post(request, post_id):
-    post = get_object_or_404(Post, pk=post_id)
+
+def category_list(request):
+    categories = Category.objects.filter() # .order_by('-created_at')[:5]
+    context = {
+        'categories': categories,
+        'title':'Home'
+    }
+    return render(request, 'blog/category/list.html', context)
+
+
+def post_view(request, slug):
+    post = get_object_or_404(Post, slug=slug)
     context = {'post': post,'title':post.heading}
-    return render(request, 'blog/detail.html', context)
+    return render(request, 'blog/post/view.html', context)
+
+
+def post_create(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        lgr.info(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.creator = request.user
+            post.site = request.site
+            post.save()
+            lgr.info("Created New Post: {}".format(post))
+
+        return redirect(reverse('blog:posts:list'))
+    else:
+        form = PostForm()
+
+    context = {
+        'form': form
+    }
+    return render(request, 'blog/post/create.html', context)
+
+
+def category_create(request):
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            category = form.save(commit=False)
+            category.site = request.site
+
+            category.save()
+            lgr.info("Created New Category: {}".format(category))
+
+        return redirect(reverse('blog:categories:list'))
+    else:
+        form = CategoryForm()
+
+    context = {
+        'form': form
+    }
+    return render(request, 'blog/category/create.html', context)
 
 
 def comment(request, post_id):
@@ -43,6 +98,7 @@ def about(request):
     }
     return render(request,'blog/about.html',context)
 
+
 def contact(request):
     context={
         'title':'Contacts',
@@ -50,7 +106,8 @@ def contact(request):
         'message':'This is the Contacts page'
     }
     return render(request,'blog/contact.html',context)
-    
+
+
 def send_email(request):
     subject = request.POST.get('subject', '')
     name = request.POST.get('name', '')

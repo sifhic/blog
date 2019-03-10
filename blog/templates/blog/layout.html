@@ -1,125 +1,177 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'application.html' %}
+{% block app %}
+    <header role="banner">
+    <nav class="navbar navbar-expand-md navbar-light bg-white absolute-top">
+      <div class="container">
 
-<head>
+        <button class="navbar-toggler order-2 order-md-1" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="Nyaundi Brian">
+        <div class="collapse navbar-collapse order-3 order-md-2" id="navbar">
+          <ul class="navbar-nav mr-auto">
 
-    <title>{{ title }} - My Blog</title>
-    {% load staticfiles %}
-    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon" />
-    
-    <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" type="text/css" href="{% static 'content/bootstrap.min.css' %}" />
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Categories</a>
+              <div class="dropdown-menu" aria-labelledby="dropdown02">
 
-    <!-- Custom CSS -->
-    <link href="{% static 'css/clean-blog.min.css' %}" rel="stylesheet">
+                <a class="dropdown-item" href="post-image.html">Image</a>
+                <a class="dropdown-item" href="post-video.html">Video</a>
+                <a class="dropdown-item" href="post-new.html">New story</a>
 
-    <!-- Custom Fonts -->
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+              </div>
+            </li>
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+            {% if request.user.is_authenticated %}
+                <li class="nav-item dropdown active">
+                  <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
+                  <div class="dropdown-menu" aria-labelledby="dropdown02">
+                    <a class="dropdown-item" href="{% url 'blog:posts:create' %}">New Post</a>
+                    <a class="dropdown-item" href="{% url 'blog:categories:create' %}">New Category</a>
+                  </div>
+                </li>
 
-</head>
+            {% endif %}
 
-<body>
-
-    <!-- Navigation -->
-    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
-        <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header page-scroll">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="{% url 'blog:index' %}">danleyb2</a>
-            </div>
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="{% url 'blog:index' %}">Home</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'blog:about' %}">About</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'blog:contact' %}">Contact</a>
-                    </li>
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
+          </ul>
         </div>
-        <!-- /.container -->
+
+        <a class="navbar-brand mx-auto order-1 order-md-3" href="{% url 'blog:index' %}">{{ request.site.name }}</a>
+
+        <div class="collapse navbar-collapse order-4 order-md-4" id="navbar">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'blog:about' %}">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'blog:contact' %}">Contact</a>
+            </li>
+          </ul>
+          <form class="form-inline" role="search">
+            <input class="search js-search form-control form-control-rounded mr-sm-2" type="text" title="Enter search query here.." placeholder="Search.." aria-label="Search">
+          </form>
+        </div>
+      </div>
     </nav>
+  </header>
 
-    {% block content %}{% endblock %}
+    <main class="main pt-4" role="main">
 
-    <hr>
+    <div class="container">
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    <ul class="list-inline text-center">
-                        <li>
-                            <a href="https://twitter.com/danleyb2">
-                                <span class="fa-stack fa-lg">
-                                    <i class="fa fa-circle fa-stack-2x"></i>
-                                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
-                                </span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="https://facebook.com/danleyb2">
-                                <span class="fa-stack fa-lg">
-                                    <i class="fa fa-circle fa-stack-2x"></i>
-                                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
-                                </span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="https://github.com/danleyb2">
-                                <span class="fa-stack fa-lg">
-                                    <i class="fa fa-circle fa-stack-2x"></i>
-                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-                                </span>
-                            </a>
-                        </li>
-                    </ul>
-                    <p class="copyright text-muted">Copyright &copy; My Blog. {{ year }} {% include 'blog/loginpartial.html' %}</p>
-                </div>
+      <div class="row">
+          {% block content %}{% endblock %}
+
+      </div>
+    </div>
+
+
+    </main>
+
+    <div class="site-newsletter">
+    <div class="container">
+      <div class="text-center">
+        <h3 class="h4 mb-2">Subscribe to our newsletter</h3>
+        <p class="text-muted">Join our monthly newsletter and never miss out on new stories and promotions.</p>
+
+        <div class="row">
+          <div class="col-xs-12 col-sm-9 col-md-7 col-lg-5 ml-auto mr-auto">
+            <div class="input-group mb-3 mt-3">
+              <input type="text" class="form-control" placeholder="Email address" aria-label="Email address">
+              <span class="input-group-btn">
+                <button class="btn btn-secondary" type="button">Subscribe</button>
+              </span>
             </div>
+          </div>
         </div>
+      </div>
+    </div>
+    </div>
+
+    <div class="site-instagram">
+    <div class="action">
+      <a class="btn btn-light" href="#">
+        Follow us @ Instagram
+      </a>
+    </div>
+    <div class="row no-gutters">
+      <div class="col-sm-6">
+        <div class="row no-gutters">
+          <div class="col-3">
+            <a class="photo" href="#">
+              <img class="img-fluid" src="https://milo.bootlab.io/img/instagram/1.jpg" alt="" />
+            </a>
+          </div>
+          <div class="col-3">
+            <a class="photo" href="#">
+              <img class="img-fluid" src="https://milo.bootlab.io/img/instagram/2.jpg" alt="" />
+            </a>
+          </div>
+          <div class="col-3">
+            <a class="photo" href="#">
+              <img class="img-fluid" src="https://milo.bootlab.io/img/instagram/3.jpg" alt="" />
+            </a>
+          </div>
+          <div class="col-3">
+            <a class="photo" href="#">
+              <img class="img-fluid" src="https://milo.bootlab.io/img/instagram/4.jpg" alt="" />
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="row no-gutters">
+          <div class="col-3">
+            <a class="photo" href="#">
+              <img class="img-fluid" src="https://milo.bootlab.io/img/instagram/5.jpg" alt="" />
+            </a>
+          </div>
+          <div class="col-3">
+            <a class="photo" href="#">
+              <img class="img-fluid" src="https://milo.bootlab.io/img/instagram/6.jpg" alt="" />
+            </a>
+          </div>
+          <div class="col-3">
+            <a class="photo" href="#">
+              <img class="img-fluid" src="https://milo.bootlab.io/img/instagram/7.jpg" alt="" />
+            </a>
+          </div>
+          <div class="col-3">
+            <a class="photo" href="#">
+              <img class="img-fluid" src="https://milo.bootlab.io/img/instagram/8.jpg" alt="" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <footer class="site-footer bg-darkest" role="contentinfo">
+    <div class="container">
+
+      <ul class="nav justify-content-center">
+        <li class="nav-item">
+          <a class="nav-link" href="#">Privacy policy</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Terms</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Feedback</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Advertise</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="page-contact.html">Contact</a>
+        </li>
+      </ul>
+      <div class="copy">
+        &copy; danleyb2.online 2019<br />
+        All rights reserved
+      </div>
+    </div>
     </footer>
 
-    <!-- jQuery -->
-    <!--script src="js/jquery.js"></script-->
-    <script src="{% static 'scripts/jquery-1.10.2.min.js' %}"></script>
 
-    <!-- Bootstrap Core JavaScript -->
-    <script src="{% static 'scripts/bootstrap.min.js' %}"></script>
-
-    <!-- Custom Theme JavaScript -->
-    <script src="{% static 'js/clean-blog.js'%}"></script>
-    {% block scripts %}{% endblock %}
-
-</body>
-
-</html>
+{% endblock %}

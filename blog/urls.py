@@ -1,32 +1,36 @@
-__author__ = 'brian'
 from . import views
-from django.conf.urls import url
-from blog.forms import BootstrapAuthenticationForm
-from datetime import datetime
-import django.contrib.auth.views
+from django.conf.urls import url,include
+from django.urls import path
+
+
+app_name = 'blog'
+
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
+    url(r'^$', views.post_list, name='index'),
     url(r'^about/$', views.about, name='about'),
     url(r'^contact/$', views.contact, name='contact'),
     url(r'^contact_me/$', views.send_email, name='contact_me'),
-    url(r'^(?P<post_id>[0-9]+)/$', views.post, name='post'),
-    url(r'(?P<post_id>[0-9]+)/comment/$', views.comment, name='comment'),
-    url(r'^login/$',
-        django.contrib.auth.views.login,
-        {
-            'template_name': 'blog/login.html',
-            'authentication_form': BootstrapAuthenticationForm,
-            'extra_context':
-                {
-                    'title': 'Log in',
-                    'year': datetime.now().year,
-                },
-        },
-        name='login'),
-    url(r'^logout$',
-        django.contrib.auth.views.logout,
-        {
-            'next_page': '/blog',
-        },
-        name='logout'),
+    url(r'^categories/', include(([
+        url(r'^$', views.category_list, name='list'),
+        url(r'^create', views.category_create, name='create'),
+        # url(r'^(?P<slug>[-\w\d]+)/', include(([
+        #
+        # ],'category'))),
+    ],'categories'))),
+
+    url(r'^posts/', include(([
+        url(r'^$', views.post_list, name='list'),
+        url(r'^create', views.post_create, name='create'),
+        url(r'^(?P<slug>[-\w\d]+)/', include(([
+            url(r'^$', views.post_view, name='view'),
+            #url(r'^update', views.group_put, name='update'),
+
+            url(r'comment/$', views.comment, name='comment'),
+            # path('<slug:slug>/', views.post, name='post'),
+            #url(r'^(?P<pk>\d+)/$', views.groups_detail, name='detail'),
+            #url(r'^(?P<pk>\d+)/edit$', views.groups_edit, name='edit'),
+            #url(r'^(?P<pk>\d+)/delete$', views.groups_delete, name='delete')
+        ],'post'))),
+    ],'posts'))),
+
 ]

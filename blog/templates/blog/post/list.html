@@ -1,0 +1,38 @@
+{% extends "blog/layout_post.html" %}
+
+{% block post %}
+    {% if posts.exists %}
+        {% for post in posts %}
+            <article class="card mb-4">
+                <header class="card-header">
+                    <div class="card-meta">
+                        <time class="timeago" datetime="2017-10-26 20:00">
+                            By <a href="#">{{ post.creator }}</a> on {{ post.created_at|date }}
+                        </time>
+                        in <a href="page-category.html">{{ post.category }}</a>
+                    </div>
+                    <a href="{% url 'blog:posts:post:view' post.slug %}">
+                        <h4 class="card-title">{{ post.heading }}</h4>
+                    </a>
+                </header>
+                <a href="{% url 'blog:posts:post:view' post.slug %}">
+                    <img class="card-img" src="img/articles/8.jpg" alt=""/>
+                </a>
+                <div class="card-body">
+                    <p class="card-text">{{ post.sub_heading }}</p>
+                </div>
+            </article><!-- /.card -->
+        {% endfor %}
+    {% else %}
+        <div class="post-preview">
+            <h2 class="post-title">
+                No posts yet
+            </h2>
+            <h3 class="post-subtitle">
+                Please check back later.
+            </h3>
+        </div>
+    {% endif %}
+
+
+{% endblock %}
