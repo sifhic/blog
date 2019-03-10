@@ -1,0 +1,58 @@
+{% extends 'authentication/layout.html' %}
+{% load web_filters %}
+{% load static %}
+{% block content %}
+
+    <div class="col-xl-5 col-lg-6 col-md-7">
+        <div class="text-center">
+            <h1 class="h2">Welcome Back &#x1f44b;</h1>
+            <p class="lead">Log in to your account to continue</p>
+            <form method="post">
+                {% csrf_token %}
+
+                {% if form.errors %}
+                    <p>{{ form.errors }}</p>
+                {% endif %}
+
+                {% for field in form %}
+                    {% if field.errors %}
+                        {% for error in field.errors %}
+                            <p style="color: red">Error {{ error }}</p>
+                        {% endfor %}
+                    {% endif %}
+
+                    {% if field.name == 'password' %}
+
+                        <div class="form-group">
+                            <input class="form-control" type="password" placeholder="Password" name="password"/>
+                            <div class="text-right">
+                                <small><a href="{% url 'authentication:password_reset' %}">Forgot password?</a></small>
+                            </div>
+                        </div>
+
+                    {% else %}
+
+
+                        <div class="form-group">
+                            {{ field|addclass:'form-control' }}
+
+                        </div>
+
+                    {% endif %}
+
+
+
+
+                {% endfor %}
+
+
+                <button class="btn btn-lg btn-block btn-primary" role="button" type="submit">
+                    Log in
+                </button>
+
+            </form>
+        </div>
+    </div>
+
+
+{% endblock %}
