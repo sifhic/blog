@@ -54,7 +54,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'authentication',
     'sorl.thumbnail',
-    'newsletter',
+    #'newsletter',
 )
 
 MIDDLEWARE = (
@@ -180,7 +180,7 @@ else:
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 STATIC_ROOT = os.path.join(INSTANCE_DIR, 'static')
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static_libs'),
+    # os.path.join(BASE_DIR, 'static_libs'),
 ]
 STATIC_URL = '/static/'
 
