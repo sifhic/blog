@@ -1,5 +1,10 @@
 # DjangoBlog
-a simple django blog.  
+a simple django blog. 
+
+## Environment
+- Python3.6
+- Linux
+- Postgresql
 
 ## Features
 
