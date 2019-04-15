@@ -67,6 +67,7 @@ MIDDLEWARE = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.sites.middleware.CurrentSiteMiddleware',
+    'authentication.middleware.AuthenticationRequiredMiddleware',
 )
 
 ROOT_URLCONF = 'project.urls'
@@ -141,6 +142,7 @@ LOGIN_EXEMPT_URLS = (
     'static/',  # only when we also serve this
     'media/',   # and this
     'api/',
+    '/',
     'password_reset/',
     'reset/',
     'signup/',
