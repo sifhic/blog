@@ -21,8 +21,10 @@ urlpatterns = [
     url(r'^posts/', include(([
         url(r'^$', views.post_list, name='list'),
         url(r'^create', views.post_create, name='create'),
+
+        # todo update to use id
         url(r'^(?P<slug>[-\w\d]+)/', include(([
-            url(r'^$', views.post_view, name='view'),
+            url(r'^$', views.post_view, name='view'), # todo here is where the slug comes in
             #url(r'^update', views.group_put, name='update'),
 
             url(r'comment/$', views.comment, name='comment'),
