@@ -50,7 +50,7 @@ def post_create(request):
             post.save()
             lgr.info("Created New Post: {}".format(post))
 
-        return redirect(reverse('blog:posts:list'))
+        return redirect(reverse('admin:posts:list'))
     else:
         form = PostForm()
 
@@ -93,7 +93,6 @@ def comment(request, post_id):
 def about(request):
     context={
         'title':'About',
-        'year':year(),
         'message':'This is the about page'
     }
     return render(request,'blog/about.html',context)
@@ -102,7 +101,6 @@ def about(request):
 def contact(request):
     context={
         'title':'Contacts',
-        'year':year(),
         'message':'This is the Contacts page'
     }
     return render(request,'blog/contact.html',context)
