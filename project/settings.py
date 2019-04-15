@@ -38,23 +38,25 @@ SECRET_KEY = 'y#9r1u$hxrm!u*%^04ia^+tzrh3c7mxgrf29!ln-*20xo()x4$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost','blog.danleyb2.online']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = (
     'blog.apps.BlogConfig',
-    'django.contrib.admin',
+    'admin.apps.AdminConfig',
+    #'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'django.contrib.flatpages',
     'authentication',
     'sorl.thumbnail',
-    #'newsletter',
+    'newsletter',
 )
 
 MIDDLEWARE = (
@@ -155,6 +157,7 @@ AFTER_LOGIN_REDIRECT_HOME_URLS = (
 
 
 # used for mailer links
+# todo this should be consistent with the site
 PROTOCOL = 'http'
 HOST = 'localhost'
 PORT = 8000
