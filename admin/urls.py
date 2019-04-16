@@ -17,6 +17,16 @@ urlpatterns = [
              #      ], 'post'))),
          ], 'posts'))),
 
+    url(r'^categories/', include(
+        ([
+             url(r'^$', views.category_list, name='list'),
+             # url(r'^create', views.post_create, name='create'),
+             # url(r'^(?P<slug>[-\w\d]+)/', include(
+             #     ([
+             #          url(r'^$', views.post_view, name='view'),
+             #          url(r'comment/$', views.comment, name='comment'),
+             #      ], 'post'))),
+         ], 'categories'))),
     url(r'^media/', include(
         ([
 
