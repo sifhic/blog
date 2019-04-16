@@ -30,8 +30,8 @@ urlpatterns = [
             url(r'comment/$', views.comment, name='comment'),
             # path('<slug:slug>/', views.post, name='post'),
             #url(r'^(?P<pk>\d+)/$', views.groups_detail, name='detail'),
-            #url(r'^(?P<pk>\d+)/edit$', views.groups_edit, name='edit'),
-            #url(r'^(?P<pk>\d+)/delete$', views.groups_delete, name='delete')
+            url(r'^(?P<pk>\d+)/edit$', views.post_edit, name='edit'),
+            url(r'^(?P<pk>\d+)/delete$', views.post_delete, name='delete')
         ],'post'))),
     ],'posts'))),
 
