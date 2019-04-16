@@ -10,6 +10,20 @@ def dashboard(request):
 
 
 
+
+# start categroies admin
+from blog.models import Category
+# Create your views here.
+def category_list(request):
+    categories = Category.objects.filter(site=request.site) .order_by('-created_at')[:5]
+    context = {
+        'categories': categories,
+        'title':'Home',
+    }
+    return render(request, 'admin/categories/list.html', context)
+# end category admin
+
+
 # start blog admin
 from blog.models import Post
 # Create your views here.
