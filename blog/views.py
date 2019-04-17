@@ -33,13 +33,55 @@ def category_list(request):
     return render(request, 'blog/category/list.html', context)
 
 
-def post_view(request, slug):
+def post_view(request, post_pk, slug = None):
     post = get_object_or_404(Post, slug=slug)
     context = {'post': post,'title':post.heading}
     return render(request, 'blog/post/view.html', context)
 
 
 def post_create(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        lgr.info(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.creator = request.user
+            post.site = request.site
+            post.save()
+            lgr.info("Created New Post: {}".format(post))
+
+        return redirect(reverse('admin:posts:list'))
+    else:
+        form = PostForm()
+
+    context = {
+        'form': form
+    }
+    return render(request, 'blog/post/create.html', context)
+
+
+def post_edit(request,post_pk):
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        lgr.info(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.creator = request.user
+            post.site = request.site
+            post.save()
+            lgr.info("Created New Post: {}".format(post))
+
+        return redirect(reverse('admin:posts:list'))
+    else:
+        form = PostForm()
+
+    context = {
+        'form': form
+    }
+    return render(request, 'blog/post/create.html', context)
+
+
+def post_delete(request,post_pk):
     if request.method == 'POST':
         form = PostForm(request.POST)
         lgr.info(request.POST)
