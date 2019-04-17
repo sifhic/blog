@@ -14,13 +14,13 @@ except ImportError:
 
 # from django.utils.deprecation import MiddlewareMixin
 
-EXEMPT_URLS = [compile(settings.LOGIN_URL.lstrip('/'))]
-if hasattr(settings, 'LOGIN_EXEMPT_URLS'):
-    EXEMPT_URLS += [compile(expr) for expr in settings.LOGIN_EXEMPT_URLS]
+EXEMPT_URLS = []
+if hasattr(settings, 'LOGIN_DEFAULT_EXEMPT_URLS'):
+    EXEMPT_URLS += [compile(expr) for expr in settings.LOGIN_DEFAULT_EXEMPT_URLS]
 
 REDIRECT_URLS = [compile(settings.LOGIN_URL.lstrip('/'))]
-if hasattr(settings, 'AFTER_LOGIN_REDIRECT_HOME_URLS'):
-    REDIRECT_URLS += [compile(expr) for expr in settings.AFTER_LOGIN_REDIRECT_HOME_URLS]
+if hasattr(settings, 'LOGIN_SESSION_REDIRECT_HOME_URLS'):
+    REDIRECT_URLS += [compile(expr) for expr in settings.LOGIN_SESSION_REDIRECT_HOME_URLS]
 
 
 class AuthenticationRequiredMiddleware(MiddlewareMixin):
@@ -45,8 +45,14 @@ class AuthenticationRequiredMiddleware(MiddlewareMixin):
         path = request.path_info.lstrip('/')
 
         if not request.user.is_authenticated:
-            if not any(m.match(path) for m in EXEMPT_URLS):
-                return HttpResponseRedirect(settings.LOGIN_URL + ('?next={}'.format(path) if path else ''))
+            if settings.LOGIN_DEFAULT_PERMISSIVE:
+                if any(m.match(path) for m in EXEMPT_URLS):
+                    return HttpResponseRedirect(settings.LOGIN_URL + ('?next={}'.format(path) if path else ''))
+
+            else:
+                if not any(m.match(path) for m in EXEMPT_URLS):
+                    return HttpResponseRedirect(settings.LOGIN_URL + ('?next={}'.format(path) if path else ''))
+
         else:
             if path and any(m.match(path) for m in REDIRECT_URLS):
                 return HttpResponseRedirect(settings.INDEX_URL)

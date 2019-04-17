@@ -136,21 +136,17 @@ USE_TZ = True
 
 
 INDEX_URL = '/'
-
 LOGIN_URL = '/login/'
-LOGIN_EXEMPT_URLS = (
-    'static/',  # only when we also serve this
-    'media/',   # and this
-    'api/',
-    '/',
-    'password_reset/',
-    'reset/',
-    'signup/',
-    'activate/',
-    'account_activation_sent/',
+
+LOGIN_DEFAULT_PERMISSIVE = True
+
+LOGIN_DEFAULT_EXEMPT_URLS = (
+    #  LOGIN_URL.lstrip('/'),  # might be needed if not default permissive
+    'admin/',
 )
 
-AFTER_LOGIN_REDIRECT_HOME_URLS = (
+
+LOGIN_SESSION_REDIRECT_HOME_URLS = (
     'signup/',
     'reset/',
     'password_reset/',
