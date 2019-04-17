@@ -11,11 +11,11 @@
                         </time>
                         in <a href="page-category.html">{{ post.category }}</a>
                     </div>
-                    <a href="{% url 'blog:posts:post:view' post.slug %}">
+                    <a href="{% url 'blog:posts:post:view-slug' post.pk post.slug %}">
                         <h4 class="card-title">{{ post.heading }}</h4>
                     </a>
                 </header>
-                <a href="{% url 'blog:posts:post:view' post.slug %}">
+                <a href="{% url 'blog:posts:post:view-slug' post.pk post.slug %}">
                     <img class="card-img" src="img/articles/8.jpg" alt=""/>
                 </a>
                 <div class="card-body">

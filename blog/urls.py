@@ -22,16 +22,15 @@ urlpatterns = [
         url(r'^$', views.post_list, name='list'),
         url(r'^create', views.post_create, name='create'),
 
-        # todo update to use id
-        url(r'^(?P<slug>[-\w\d]+)/', include(([
-            url(r'^$', views.post_view, name='view'), # todo here is where the slug comes in
-            #url(r'^update', views.group_put, name='update'),
+        url(r'^(?P<post_pk>\d+)/', include(([
+            url(r'^$', views.post_view, name='view'),
+            url(r'^(?P<slug>[-\w\d]+)', views.post_view, name='view-slug'),
 
             url(r'comment/$', views.comment, name='comment'),
             # path('<slug:slug>/', views.post, name='post'),
             #url(r'^(?P<pk>\d+)/$', views.groups_detail, name='detail'),
-            url(r'^(?P<pk>\d+)/edit$', views.post_edit, name='edit'),
-            url(r'^(?P<pk>\d+)/delete$', views.post_delete, name='delete')
+            url(r'^edit$', views.post_edit, name='edit'),
+            url(r'^delete$', views.post_delete, name='delete')
         ],'post'))),
     ],'posts'))),
 

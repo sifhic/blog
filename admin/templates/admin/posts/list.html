@@ -6,6 +6,7 @@
         <a class="nav-link" href="{% url 'admin:dashboard' %}">dashboard</a>
 
         <a class="nav-link active" href="{% url 'admin:posts:list' %}">posts</a>
+        <a class="nav-link" href="{% url 'admin:categories:list' %}">categories</a>
         {#  <a class="nav-link" href="#">Link</a>#}
         <a class="nav-link disabled" href="{% url 'admin:media:list' %}" tabindex="-1" aria-disabled="true">media</a>
         <a class="nav-link disabled" href="{% url 'admin:users:list' %}" tabindex="-1" aria-disabled="true">users</a>
@@ -36,8 +37,8 @@
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             {{ post.heading }}
 
-                            <a class="badge badge-primary badge-pill" href="{% url 'blog:posts:post:edit' %}">edit</a>
-                            <a class="badge badge-danger badge-pill" href="{% url 'blog:posts:post:delete' %}">delete</a>
+                            <a class="badge badge-primary badge-pill" href="{% url 'blog:posts:post:edit' post.pk %}">edit</a>
+                            <a class="badge badge-danger badge-pill" href="{% url 'blog:posts:post:delete'  post.pk %}">delete</a>
 
                         </li>
                     {% endfor %}
