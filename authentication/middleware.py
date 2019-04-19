@@ -22,6 +22,10 @@ REDIRECT_URLS = [compile(settings.LOGIN_URL.lstrip('/'))]
 if hasattr(settings, 'LOGIN_SESSION_REDIRECT_HOME_URLS'):
     REDIRECT_URLS += [compile(expr) for expr in settings.LOGIN_SESSION_REDIRECT_HOME_URLS]
 
+if hasattr(settings, 'LOGIN_DEFAULT_PERMISSIVE'):
+    if not settings.LOGIN_DEFAULT_PERMISSIVE:
+        EXEMPT_URLS += REDIRECT_URLS
+
 
 class AuthenticationRequiredMiddleware(MiddlewareMixin):
     """

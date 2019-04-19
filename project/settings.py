@@ -141,7 +141,6 @@ LOGIN_URL = '/login/'
 LOGIN_DEFAULT_PERMISSIVE = True
 
 LOGIN_DEFAULT_EXEMPT_URLS = (
-    #  LOGIN_URL.lstrip('/'),  # might be needed if not default permissive
     'admin/',
 )
 
