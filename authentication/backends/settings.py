@@ -2,8 +2,10 @@ from django.conf import settings
 from django.contrib.auth.hashers import check_password
 
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 
-User  = get_user_model()
+User = get_user_model()
+
 
 class SettingsBackend(object):
     """
@@ -16,23 +18,25 @@ class SettingsBackend(object):
     """
 
     def authenticate(self, request, username=None, password=None):
-        login_valid = (settings.ADMIN_LOGIN == username)
+        # TODO using email when no account exists doesn't work
+        login_valid = (username in settings.ADMIN_LOGIN)
         pwd_valid = check_password(password, settings.ADMIN_PASSWORD)
-        # TODO  account uses email as username field
         if login_valid and pwd_valid:
-            try:
-                user = User.objects.get(username=username)
-            except User.DoesNotExist:
+            users = User.objects.filter(Q(**{User.USERNAME_FIELD: username}) | Q(email__iexact=username))
+            if not users.exists():
                 # Create a new user. There's no need to set a password
                 # because only the password from settings.py is checked.
-
-                user = User(username=username)
+                user = User(username='admin')
                 user.is_staff = True
                 user.is_superuser = True
-                user.email = 'admin@{}.com'.format(settings.PROJECT_NAME)
+                user.email = '{}'.format(settings.ADMIN_LOGIN.__iter__().__next__())
+                user.first_name = "Super"
+                user.last_name = "Admin"
                 user.save()
+                return user
+            else:
+                return users[0]
 
-            return user
         return None
 
     def get_user(self, user_id):
