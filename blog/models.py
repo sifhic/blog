@@ -37,6 +37,43 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
+import markdown
+
+class Block(models.Model):
+    TEXT = 1
+    DIVIDER = 2
+    BULLETED_LIST = 3
+    IMAGE = 4
+    QUOTE = 5
+    HEADER = 6
+    SUB_HEADER = 7
+    SUB_SUB_HEADER = 8
+    CODE = 9
+    TODO = 10
+
+    BLOCK_CHOICES = (
+        (TEXT,'TEXT'),
+        (DIVIDER,'DIVIDER'),
+        (BULLETED_LIST,'BULLETED LIST'),
+        (IMAGE,'IMAGE'),
+        (QUOTE,'QUOTE'),
+        (HEADER,'HEADER'),
+        (SUB_HEADER,'SUB HEADER'),
+        (SUB_SUB_HEADER,'SUB SUB HEADER'),
+        (CODE,'CODE'),
+        (TODO,'TODO'),
+    )
+
+    type = models.PositiveSmallIntegerField(choices=BLOCK_CHOICES,default=TEXT)
+    content = models.TextField(null=True,blank=True)
+
+    def rendered(self):
+        if self.content:
+            return markdown.markdown(self.content)
+
+        return ''
+
+
 
 class Post(models.Model):
     def __str__(self):
@@ -49,7 +86,9 @@ class Post(models.Model):
     heading = models.CharField(max_length=200)
     sub_heading = models.CharField(max_length=300,null=True,blank=True)
     slug = models.SlugField(max_length=100) # editable=False
-    body = models.TextField()
+
+    body = models.ManyToManyField(Block,blank=True)
+
     category = models.ForeignKey(Category,on_delete=models.CASCADE)
     is_published = models.BooleanField(default=False)
     featured_image = models.ImageField(upload_to='featured_images', blank=True)
@@ -72,9 +111,14 @@ class Post(models.Model):
         super(Post, self).save(*args, **kwargs)
 
 
+class Contact(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+
+
 class Comment(models.Model):
     post = models.ForeignKey(Post,on_delete=models.CASCADE)
-    creator = models.ForeignKey(get_user_model(),on_delete=models.CASCADE,null=True,blank=True)
+    creator = models.ForeignKey(Contact,on_delete=models.CASCADE)
     text = models.TextField()
 
     reply_to = models.ForeignKey('self', related_name='replies', null=True, blank=True,on_delete=models.CASCADE)
@@ -89,6 +133,10 @@ class SiteProfile(models.Model):
     site = models.OneToOneField(Site, on_delete=models.CASCADE)
     about = models.TextField(blank=True)
 
-
     def __str__(self):
         return self.site.name
+
+
+class Message(models.Model):
+    site = models.OneToOneField(Site, on_delete=models.CASCADE)
+    sender = models.ForeignKey(Contact,on_delete=models.CASCADE)

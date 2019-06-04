@@ -1,5 +1,5 @@
 from django.contrib import admin
-from blog.models import Post,Comment
+from blog.models import Post,Comment,Block
 from django.db import models
 from django.forms import ModelForm
 from django.contrib.admin import ModelAdmin
@@ -52,5 +52,10 @@ class PostAdmin(admin.ModelAdmin):
     inlines = [CommentAdmin]
     list_filter = ['created_at']
     search_fields = ['body']
+
+@admin.register(Block)
+class BlockAdmin(admin.ModelAdmin):
+    list_display = [f.name for f in Block._meta.fields]
+
 
 admin.site.register(Post,PostAdmin)

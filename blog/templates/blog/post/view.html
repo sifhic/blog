@@ -18,7 +18,19 @@
         </a>
         <div class="card-body">
 
-            {{ post.body|safe }}
+            {% for block in post.body.all %}
+
+                <pre style="border:1px solid black;">
+                {{ block.get_type_display }}
+                {{ block.content }}
+                </pre>
+
+                <section>
+
+                    {{ block.rendered|safe }}
+
+                </section>
+            {% endfor %}
 
             <hr/>
 
