@@ -1,6 +1,5 @@
 from django.contrib import admin
-from blog.models import Post,Comment,Block
-from django.db import models
+from blog.models import Post,Comment,Block,Contact,Category,Tag,SiteProfile
 from django.forms import ModelForm
 from django.contrib.admin import ModelAdmin
 
@@ -56,6 +55,25 @@ class PostAdmin(admin.ModelAdmin):
 @admin.register(Block)
 class BlockAdmin(admin.ModelAdmin):
     list_display = [f.name for f in Block._meta.fields]
+
+@admin.register(SiteProfile)
+class SiteProfileAdmin(admin.ModelAdmin):
+    list_display = [f.name for f in SiteProfile._meta.fields]
+
+
+@admin.register(Contact)
+class ContactAdmin(admin.ModelAdmin):
+    list_display = [f.name for f in Contact._meta.fields]
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = [f.name for f in Category._meta.fields]
+
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = [f.name for f in Tag._meta.fields]
 
 
 admin.site.register(Post,PostAdmin)
