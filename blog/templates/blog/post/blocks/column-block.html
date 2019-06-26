@@ -1,0 +1,7 @@
+<div class="row">
+    {% for block in block.child_blocks %}
+
+        {{ block.rendered|safe }}
+
+    {% endfor %}
+</div>

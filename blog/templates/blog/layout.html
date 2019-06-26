@@ -14,11 +14,9 @@
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Categories</a>
               <div class="dropdown-menu" aria-labelledby="dropdown02">
-
-                <a class="dropdown-item" href="post-image.html">Image</a>
-                <a class="dropdown-item" href="post-video.html">Video</a>
-                <a class="dropdown-item" href="post-new.html">New story</a>
-
+                  {% for category in request.categories %}
+                      <a class="dropdown-item" href="post-image.html">{{ category.name }}</a>
+                  {% endfor %}
               </div>
             </li>
 
@@ -54,8 +52,16 @@
               {% endif %}
 
           </ul>
-          <form class="form-inline" role="search">
-            <input class="search js-search form-control form-control-rounded mr-sm-2" type="text" title="Enter search query here.." placeholder="Search.." aria-label="Search">
+          <form class="form-inline" role="search" method="get" action="{% url 'blog:posts:list' %}">{% csrf_token %}
+            <input class="search js-search form-control form-control-rounded mr-sm-2"
+                   type="text"
+                   name="q"
+                   title="Enter search query here.."
+                   {% if request.GET.q %}
+                       value="{{ request.GET.q }}"
+                   {% endif %}
+                   placeholder="Search.."
+                   aria-label="Search">
           </form>
         </div>
       </div>

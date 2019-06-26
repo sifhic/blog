@@ -55,6 +55,8 @@ class PostAdmin(admin.ModelAdmin):
 @admin.register(Block)
 class BlockAdmin(admin.ModelAdmin):
     list_display = [f.name for f in Block._meta.fields]
+    list_filter = ['type']
+
 
 @admin.register(SiteProfile)
 class SiteProfileAdmin(admin.ModelAdmin):

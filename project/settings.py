@@ -57,6 +57,8 @@ INSTALLED_APPS = (
     'authentication',
     'sorl.thumbnail',
     'newsletter',
+    'django_extensions',
+
 )
 
 MIDDLEWARE = (
@@ -68,6 +70,7 @@ MIDDLEWARE = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.sites.middleware.CurrentSiteMiddleware',
     'authentication.middleware.AuthenticationRequiredMiddleware',
+    'blog.middleware.SiteMetaMiddleware',
 )
 
 ROOT_URLCONF = 'project.urls'

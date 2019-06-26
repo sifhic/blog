@@ -13,10 +13,23 @@ import logging
 lgr = logging.getLogger(__name__)
 
 
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
 def post_list(request):
-    posts = Post.objects.filter(site=request.site,is_published=True) .order_by('-created_at')[:5]
+    page = request.GET.get('page', 1)
+    posts_queryset = Post.objects.filter(site=request.site,is_published=True).order_by('-created_at')
+
+    q = request.GET.get('q', None)
+    if q:
+        posts_queryset = posts_queryset.filter(heading__icontains=q)
+
+    paginator = Paginator(posts_queryset, 5)
+    try:
+        posts = paginator.page(page)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)
     context = {
         'posts': posts,
         'title':'Home',
@@ -35,6 +48,8 @@ def category_list(request):
 
 def post_view(request, post_pk, slug = None):
     post = get_object_or_404(Post, slug=slug)
+
+    post.body.all()
     context = {'post': post,'title':post.heading}
     return render(request, 'blog/post/view.html', context)
 

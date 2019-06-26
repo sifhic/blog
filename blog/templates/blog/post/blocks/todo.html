@@ -1,6 +1,8 @@
-
-<div class="custom-control custom-checkbox">
-  <input type="checkbox" class="custom-control-input" id="customCheck1" {% if checked %}checked{% endif %} readonly>
-  <label {% if checked %}style="text-decoration: line-through;"{% endif %} class="custom-control-label" for="customCheck1">{{ item }}</label>
+<div class="form-check">
+  <label class="form-check-label" {% if checked %}style="text-decoration: line-through;"{% endif %}>
+    <input class="form-check-input" type="checkbox" value=""  {% if checked %}checked="checked"{% endif %} readonly="readonly">
+    {{ item }}
+  </label>
 </div>
+
 

@@ -3,6 +3,8 @@ from django.contrib.sites.models import Site
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from blog.unique_slug import unique_slugify
+from django.contrib.postgres.fields import JSONField
+
 
 
 class Category(models.Model):
@@ -38,6 +40,10 @@ class Tag(models.Model):
         return self.name
 
 import markdown
+from django.template.loader import render_to_string
+from pygments import highlight
+
+from pygments.formatters import HtmlFormatter
 
 class Block(models.Model):
     TEXT = 1
@@ -50,6 +56,8 @@ class Block(models.Model):
     SUB_SUB_HEADER = 8
     CODE = 9
     TODO = 10
+    COLUMN_LIST_BLOCK = 11
+    COLUMN_BLOCK = 12
 
     BLOCK_CHOICES = (
         (TEXT,'TEXT'),
@@ -62,18 +70,83 @@ class Block(models.Model):
         (SUB_SUB_HEADER,'SUB SUB HEADER'),
         (CODE,'CODE'),
         (TODO,'TODO'),
+        (COLUMN_LIST_BLOCK,'ColumnListBlock'),
+        (COLUMN_BLOCK,'ColumnBlock'),
     )
 
+    notion_updated_run = models.DateTimeField('Notion date run', null=True,blank=True)
+    notion_updated_at = models.DateTimeField('Notion date updated', null=True,blank=True)
+    notion_reference = models.CharField(unique=True, blank=True, null=True, max_length=100)
     type = models.PositiveSmallIntegerField(choices=BLOCK_CHOICES,default=TEXT)
-    content = models.TextField(null=True,blank=True)
+    config = JSONField(default=dict)
+
+    children = models.ManyToManyField('self',symmetrical=False)
+
+    def child_blocks(self):
+        return self.children.order_by('id')
+
+    @property
+    def content(self):
+        return self.config['content'] if 'content' in self.config else ''
 
     def rendered(self):
-        if self.content:
-            return markdown.markdown(self.content)
+        if self.type == Block.BULLETED_LIST:
+            rendered = render_to_string('blog/post/blocks/bulleted-list.html', {'item': self.content})
+            return  rendered
 
-        return ''
+        elif self.type == Block.TEXT:
+            return markdown.markdown(self.content) if len(self.content) else '<p><br></p>'
 
+        elif self.type == Block.COLUMN_LIST_BLOCK:
+            rendered = render_to_string('blog/post/blocks/column-list-block.html', {'block':self})
+            return rendered
 
+        elif self.type == Block.COLUMN_BLOCK:
+            rendered = render_to_string('blog/post/blocks/column-block.html', {'block':self})
+            return rendered
+
+        elif self.type == Block.TODO:
+            rendered = render_to_string('blog/post/blocks/todo.html', {
+                'item': self.content,
+                'checked':self.config['checked']
+            })
+            return rendered
+
+        elif self.type == Block.HEADER:
+            return '<h1>{}</h1>'.format(self.content)
+
+        elif self.type == Block.SUB_HEADER:
+            return '<h2>{}</h2>'.format(self.content)
+
+        elif self.type == Block.SUB_SUB_HEADER:
+            return '<h3>{}</h3>'.format(self.content)
+
+        elif self.type == Block.IMAGE:
+            return '<img src="{}" alt="{}" class="img-fluid">'.format(
+                self.config['display_source'],
+                self.config['caption']
+            )
+
+        elif self.type == Block.QUOTE:
+            return '<blockquote>{}</blockquote>'.format(self.content)
+
+        elif self.type == Block.DIVIDER:
+            return '<hr>'
+
+        elif self.type == Block.CODE:
+            code = self.content
+            if self.config['language'] == 'python':
+                pass
+
+            from pygments.lexers import PythonLexer
+            rendered = highlight(code, PythonLexer(), HtmlFormatter())
+
+            return rendered
+
+        return '<strong style="color:red">{}</strong>'.format( self.get_type_display())
+
+    def __str__(self):
+        return '{}'.format(self.get_type_display())
 
 class Post(models.Model):
     def __str__(self):
@@ -94,6 +167,11 @@ class Post(models.Model):
     featured_image = models.ImageField(upload_to='featured_images', blank=True)
     created_at = models.DateTimeField('date created', auto_now_add=True)
     updated_at = models.DateTimeField('date updated', auto_now=True)
+
+    notion_updated_run = models.DateTimeField('Notion date run', null=True,blank=True)
+    notion_updated_at = models.DateTimeField('Notion date updated', null=True,blank=True)
+    notion_reference = models.CharField(unique=True,blank=True,null=True,max_length=100)
+
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag,blank=True)
 
@@ -109,6 +187,9 @@ class Post(models.Model):
             unique_slugify(self, self.heading,self.site)
 
         super(Post, self).save(*args, **kwargs)
+
+    def blocks(self):
+        return self.body.order_by('id')
 
 
 class Contact(models.Model):
