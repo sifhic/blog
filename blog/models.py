@@ -162,7 +162,7 @@ class Post(models.Model):
 
     body = models.ManyToManyField(Block,blank=True)
 
-    category = models.ForeignKey(Category,on_delete=models.CASCADE)
+    category = models.ForeignKey(Category,on_delete=models.CASCADE,null=True,blank=True)
     is_published = models.BooleanField(default=False)
     featured_image = models.ImageField(upload_to='featured_images', blank=True)
     created_at = models.DateTimeField('date created', auto_now_add=True)
