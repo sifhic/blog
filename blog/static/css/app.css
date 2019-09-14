@@ -10276,8 +10276,8 @@ a.text-dark:focus, a.text-dark:hover {
 }
 
 .navbar-brand {
-    font-family: "PT Serif", serif;
-    text-transform: lowercase;
+    /*font-family: "PT Serif", serif;*/
+    /*text-transform: lowercase;*/
     font-weight: 700
 }
 
