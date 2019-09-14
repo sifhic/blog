@@ -18,26 +18,28 @@
                 <a href="{% url 'blog:posts:post:view-slug' post.pk post.slug %}">
                     <img class="card-img" src="img/articles/8.jpg" alt=""/>
                 </a>
+                {% if post.sub_heading %}
                 <div class="card-body">
                     <p class="card-text">{{ post.sub_heading }}</p>
                 </div>
+                {% endif %}
             </article><!-- /.card -->
         {% endfor %}
 
-         {% if post.has_other_pages %}
+         {% if posts.has_other_pages %}
              <nav>
                 <ul class="pagination justify-content-center mt-2">
-                    {% if post.has_previous %}
+                    {% if posts.has_previous %}
                         <li class="page-item ">
                             <a class="page-link"
-                               href="?page={{ post.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Previous</a>
+                               href="?page={{ posts.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Previous</a>
                         </li>
                     {% else %}
                         <li class="page-item  disabled"><a class="page-link">Previous</a></li>
                     {% endif %}
-			        <li class="active page-item"><a class="page-link"> Page {{ post.number }} of {{ post.paginator.num_pages }} </a></li>
-                    {% if post.has_next %}
-                        <li class="page-item"><a class="page-link" href="?page={{ post.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Next</a>
+			        <li class="active page-item"><a class="page-link"> Page {{ posts.number }} of {{ posts.paginator.num_pages }} </a></li>
+                    {% if posts.has_next %}
+                        <li class="page-item"><a class="page-link" href="?page={{ posts.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Next</a>
                         </li>
                     {% else %}
                         <li class="disabled page-item"><a class="page-link">Next</a></li>
