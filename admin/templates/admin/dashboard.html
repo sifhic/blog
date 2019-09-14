@@ -1,15 +1,14 @@
 {% extends 'admin/layout.html' %}
 
 {% block content %}
-
-
-
-
     <div class="card">
         <div class="card-body">
-            This is some text within a card body.
+
+            <ul>
+                <li> Posts : <strong>{{ posts.count }}</strong>  </li>
+                <li> Categories : <strong>{{ categories.count }}</strong></li>
+            </ul>
+
         </div>
     </div>
-
-
 {% endblock %}

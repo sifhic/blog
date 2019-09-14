@@ -8,8 +8,8 @@
             <nav class="nav">
                 <a class="nav-link active" href="{% url 'admin:dashboard' %}">dashboard</a>
                 <a class="nav-link" href="{% url 'admin:posts:list' %}">posts</a>
-		<a class="nav-link" href="{% url 'admin:categories:list' %}">categories</a>
- 
+                <a class="nav-link" href="{% url 'admin:categories:list' %}">categories</a>
+
                 {#  <a class="nav-link" href="#">Link</a>#}
                 <a class="nav-link disabled"
                    href="{% url 'admin:media:list' %}"
@@ -21,7 +21,7 @@
                    tabindex="-1"
                    aria-disabled="true">users</a>
 
-                <a class="nav-link disabled"
+                <a class="nav-link"
                    href="{% url 'admin:settings:list' %}"
                    tabindex="-1"
                    aria-disabled="true">settings</a>

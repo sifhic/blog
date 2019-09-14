@@ -1,0 +1,37 @@
+{% extends 'admin/layout.html' %}
+{% load web_filters %}
+
+{% block content %}
+
+    <div class="card">
+        <div class="card-body">
+            <form action="" method="post" class="">
+                {% csrf_token %}
+                {% if form.errors %}
+                    <p class="validation-summary-errors">{{ form.errors }}</p>
+                {% endif %}
+                <div class="text-center">
+                    <h4>Site Profile</h4>
+                    <hr/>
+                </div>
+                {% for field in form %}
+                    {% if field.errors %}
+                        {% for error in field.errors %}
+                            <p style="color: red">Error {{ error }}</p>
+                        {% endfor %}
+                    {% endif %}
+                    <div class="form-group">
+                        {#  {% if field.field.required %}required{% endif %}    #}
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field|addclass:'form-control' }}
+                        <span class="form-text text-muted">{{ field.help_text }}</span>
+                    </div>
+                {% endfor %}
+
+                <button type="submit" class="btn btn-success">Save</button>
+            </form>
+        </div>
+    </div>
+
+
+{% endblock %}
