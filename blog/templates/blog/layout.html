@@ -4,21 +4,34 @@
     <nav class="navbar navbar-expand-md navbar-light bg-white absolute-top">
       <div class="container">
 
-        <button class="navbar-toggler order-2 order-md-1" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler order-2 order-md-1"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbar"
+                aria-controls="navbar"
+                aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse order-3 order-md-2" id="navbar">
           <ul class="navbar-nav mr-auto">
 
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Categories</a>
-              <div class="dropdown-menu" aria-labelledby="dropdown02">
-                  {% for category in request.categories %}
-                      <a class="dropdown-item" href="post-image.html">{{ category.name }}</a>
-                  {% endfor %}
-              </div>
-            </li>
+            {% if display_categories %}
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle"
+                     href="#"
+                     id="dropdown02"
+                     data-toggle="dropdown"
+                     aria-haspopup="true"
+                     aria-expanded="false">Categories</a>
+                  <div class="dropdown-menu" aria-labelledby="dropdown02">
+                      {% for category in request.categories %}
+                          <a class="dropdown-item" href="post-image.html">{{ category.name }}</a>
+                      {% endfor %}
+                  </div>
+                </li>
+
+            {% endif %}
 
             {% if request.user.is_authenticated %}
                 <li class="nav-item dropdown active">
@@ -52,7 +65,7 @@
               {% endif %}
 
           </ul>
-          <form class="form-inline" role="search" method="get" action="{% url 'blog:posts:list' %}">{% csrf_token %}
+          <form class="form-inline" role="search" method="get" action="{% url 'blog:posts:list' %}">
             <input class="search js-search form-control form-control-rounded mr-sm-2"
                    type="text"
                    name="q"
@@ -84,8 +97,8 @@
     <div class="site-newsletter">
     <div class="container">
       <div class="text-center">
-        <h3 class="h4 mb-2">Subscribe to our newsletter</h3>
-        <p class="text-muted">Join our monthly newsletter and never miss out on new stories and promotions.</p>
+        <h3 class="h4 mb-2">Subscribe to my newsletter</h3>
+        <p class="text-muted">Join my monthly newsletter and never miss out on new stories and promotions.</p>
 
         <div class="row">
           <div class="col-xs-12 col-sm-9 col-md-7 col-lg-5 ml-auto mr-auto">
@@ -100,11 +113,11 @@
       </div>
     </div>
     </div>
-
+{% comment %}
     <div class="site-instagram">
     <div class="action">
-      <a class="btn btn-light" href="#">
-        Follow us @ Instagram
+      <a class="btn btn-light" href="https://instagram.com/danleyb2/">
+        Follow me @ Instagram
       </a>
     </div>
     <div class="row no-gutters">
@@ -158,6 +171,7 @@
       </div>
     </div>
     </div>
+{% endcomment %}
 
     <footer class="site-footer bg-darkest" role="contentinfo">
     <div class="container">
