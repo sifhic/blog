@@ -37,9 +37,9 @@
                     <a href="{% url 'blog:posts:post:view-slug' popular_post.pk popular_post.slug %}"
                        class="d-inline-block">
                       <h4 class="h6">{{ popular_post.heading }}</h4>
-                      <img class="card-img" src="img/articles/2.jpg" alt="" />
+{#                      <img class="card-img" src="img/articles/2.jpg" alt="" />#}
                     </a>
-                    <time class="timeago" datetime="2017-10-03 20:00">{{ popular_post.created_at|date }}</time> {{ popular_post.category.name }}
+{#                    <time class="timeago" datetime="2017-10-03 20:00">{{ popular_post.created_at|date }}</time> {{ popular_post.category.name }}#}
 
 
               {% endfor %}
