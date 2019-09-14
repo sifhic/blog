@@ -1,4 +1,6 @@
 # DjangoBlog
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fdanleyb2%2Fblog.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fdanleyb2%2Fblog?ref=badge_shield)
+
 a simple django blog. 
 
 ## Environment
@@ -19,3 +21,7 @@ a simple django blog.
 - Pwa, works offline and can be added to Home Screen
 - Telegram Instant preview
 - Twitter Cards Support
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fdanleyb2%2Fblog.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fdanleyb2%2Fblog?ref=badge_large)
