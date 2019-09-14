@@ -62,6 +62,15 @@ def post_create(request):
             post = form.save(commit=False)
             post.creator = request.user
             post.site = request.site
+
+            if not post.category:
+                category, created = Category.objects.get_or_create(
+                    name='default',
+                    site_id=1,
+                    slug='default'
+                )
+                post.category = category
+
             post.save()
             lgr.info("Created New Post: {}".format(post))
 
@@ -76,8 +85,9 @@ def post_create(request):
 
 
 def post_edit(request,post_pk):
+    instance = Post.objects.get(pk=post_pk)
     if request.method == 'POST':
-        form = PostForm(request.POST)
+        form = PostForm(request.POST,instance=instance)
         lgr.info(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
@@ -88,7 +98,7 @@ def post_edit(request,post_pk):
 
         return redirect(reverse('admin:posts:list'))
     else:
-        form = PostForm()
+        form = PostForm(instance=instance)
 
     context = {
         'form': form
