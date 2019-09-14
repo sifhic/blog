@@ -79,7 +79,9 @@
             <div class="card-meta">
                 By <a href="#">{{ post.creator }}</a> on
                 <time class="timeago" datetime="2017-10-26 20:00">{{ post.created_at|date }}</time>
-                in <a href="page-category.html">{{ post.category }}</a>
+                {% if post.category %}
+                    in <a href="page-category.html">{{ post.category }}</a>
+                {% endif %}
             </div>
             <a href="{% url 'blog:posts:post:view-slug' post.pk post.slug %}">
                 <h1 class="card-title">{{ post.heading }}</h1>
