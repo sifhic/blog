@@ -34,13 +34,13 @@ lgr = logging.getLogger(__name__)
 
 
 def parse_block(child, config,children_update_run):
-
     save = True
     new_block_nt_block = False
     child_last_edited = make_aware(datetime.fromtimestamp(int(child.get('last_edited_time')) / 1000))
 
     try:
         block = BlogBlock.objects.get(nt_block__reference=child.id)
+        lgr.info('parse_block existing')
         block_nt_block = block.nt_block
 
         block_nt_block.updated_run = children_update_run
@@ -52,15 +52,16 @@ def parse_block(child, config,children_update_run):
 
     except BlogBlock.DoesNotExist:
         block = BlogBlock()
-
+        new_block_nt_block = True
+        lgr.info('parse_block creating new')
         try:block_nt_block = Block.objects.get(reference=child.id)
         except Block.DoesNotExist:
             block_nt_block = Block()
             block_nt_block.reference = child.id
             block_nt_block.config = config
-            new_block_nt_block = True
 
         block_nt_block.updated_run = children_update_run
+
     block_nt_block.updated_at = child_last_edited
 
     if isinstance(child, ColumnListBlock):
@@ -77,25 +78,25 @@ def parse_block(child, config,children_update_run):
                 lgr.info(column_block_child)
                 cbc = parse_block(column_block_child, config,children_update_run)
                 cb.children.add(cbc)
-
     elif isinstance(child, ColumnBlock):
         block.type = BlogBlock.COLUMN_BLOCK
         # todo save config
         save = False
         block.save()
-
     elif isinstance(child, TextBlock):
         block.type = BlogBlock.TEXT
+        block.config = {}
         block.config['content'] = child.title
-
     elif isinstance(child, DividerBlock):
+        block.config = {}
         block.type = BlogBlock.DIVIDER
-
     elif isinstance(child, BulletedListBlock):
         block.type = BlogBlock.BULLETED_LIST
+        block.config = {}
         block.config['content'] = child.title
     elif isinstance(child, ImageBlock):
         block.type = BlogBlock.IMAGE
+        block.config = {}
         block.config['display_source'] = child.display_source
         block.config['file_id'] = child.file_id
         block.config['caption'] = child.caption
@@ -103,27 +104,31 @@ def parse_block(child, config,children_update_run):
         block.config['height'] = child.height
         block.config['page_width'] = child.page_width
         block.config['width'] = child.width
-
     elif isinstance(child, QuoteBlock):
         block.type = BlogBlock.QUOTE
+        block.config = {}
         block.config['content'] = child.title
     elif isinstance(child, HeaderBlock):
         block.type = BlogBlock.HEADER
+        block.config = {}
         block.config['content'] = child.title
     elif isinstance(child, SubheaderBlock):
         block.type = BlogBlock.SUB_HEADER
+        block.config = {}
         block.config['content'] = child.title
     elif isinstance(child, SubsubheaderBlock):
         block.type = BlogBlock.SUB_SUB_HEADER
+        block.config = {}
         block.config['content'] = child.title
     elif isinstance(child, CodeBlock):
         block.type = BlogBlock.CODE
+        block.config = {}
         block.config['content'] = child.title
         block.config['language'] = child.language
         block.config['wrap'] = child.wrap
-
     elif isinstance(child, TodoBlock):
         block.type = BlogBlock.TODO
+        block.config = {}
         block.config['content'] = child.title
         block.config['checked'] = child.checked
     else:
@@ -135,9 +140,7 @@ def parse_block(child, config,children_update_run):
 
     if new_block_nt_block:
         block_nt_block.block = block
-        block_nt_block.save()
-    else:
-        block_nt_block.save()
+    block_nt_block.save()
 
     return block
 
