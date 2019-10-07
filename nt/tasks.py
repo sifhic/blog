@@ -1,18 +1,9 @@
+import logging
+
+from celery import shared_task
+from django.conf import settings
 from django.utils import timezone
 from django.utils.timezone import datetime, make_aware
-from notion.client import NotionClient
-from celery import shared_task
-from requests.exceptions import ConnectionError
-
-from blog.models import (
-    Category,
-    Block as BlogBlock,
-    Post,
-    Tag
-
-)
-from nt.models import Block, Config
-
 from notion.block import (
     TextBlock,
     DividerBlock,
@@ -27,13 +18,17 @@ from notion.block import (
     ColumnListBlock,
     ColumnBlock
 )
+from notion.client import NotionClient
+from requests.exceptions import ConnectionError
 
-from django.conf import settings
-import json
-import logging
-import traceback
-# from tasker.models import Task,TaskException
-from django.utils import timezone
+from blog.models import (
+    Category,
+    Block as BlogBlock,
+    Post,
+    Tag
+
+)
+from nt.models import Block, Config
 
 lgr = logging.getLogger(__name__)
 
@@ -177,12 +172,18 @@ def process_post(row, config, posts_update_run):
         except Block.DoesNotExist:
             post_nt_block = Block()
             post_nt_block.reference = row.id
-        post_nt_block.config = config
+            post_nt_block.config = config
+
         post_nt_block.updated_at = row_last_edited
         post_nt_block.updated_run = posts_update_run
-        post_nt_block.post = post
+
+        lgr.info('saving post: {}'.format(post))
         post.save()
+        lgr.info('saved post: {}'.format(post))
+        lgr.info('saving post_nt_block: {}'.format(post_nt_block))
+        post_nt_block.post = post
         post_nt_block.save()
+        lgr.info('saved post_nt_block: {}'.format(post_nt_block))
 
     post.heading = row.name
     # post.sub_heading = row.
