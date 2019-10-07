@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^pages/', include('django.contrib.flatpages.urls')),
     #url(r'^newsletter/', include('newsletter.urls')),
     path('admin/', include('admin.urls')),
+    path('notion/', include('nt.urls')),
     #path('admin_django/', admin.site.urls),
 
 ]

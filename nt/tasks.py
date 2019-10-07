@@ -2,8 +2,8 @@ from django.utils import timezone
 from django.utils.timezone import datetime, make_aware
 from notion.client import NotionClient
 from celery import shared_task
+from requests.exceptions import ConnectionError
 
-# from
 from blog.models import (
     Category,
     Block as BlogBlock,
@@ -11,7 +11,7 @@ from blog.models import (
     Tag
 
 )
-from nt.models import Block,Config
+from nt.models import Block, Config
 
 from notion.block import (
     TextBlock,
@@ -34,10 +34,11 @@ import logging
 import traceback
 # from tasker.models import Task,TaskException
 from django.utils import timezone
+
 lgr = logging.getLogger(__name__)
 
 
-def parse_block(child,config):
+def parse_block(child, config):
     children_update_run = timezone.now()
     save = True
     child_last_edited = make_aware(datetime.fromtimestamp(int(child.get('last_edited_time')) / 1000))
@@ -75,12 +76,12 @@ def parse_block(child,config):
         block.save()
         for column_block in child.children:
             lgr.info(column_block)
-            cb = parse_block(column_block,config)
+            cb = parse_block(column_block, config)
             block.children.add(cb)
 
             for column_block_child in column_block.children:
                 lgr.info(column_block_child)
-                cbc = parse_block(column_block_child,config)
+                cbc = parse_block(column_block_child, config)
                 cb.children.add(cbc)
 
     elif isinstance(child, ColumnBlock):
@@ -139,9 +140,8 @@ def parse_block(child,config):
     block_nt_block.save()
     return block
 
-from requests.exceptions import ConnectionError
 
-def process_post(row,config,posts_update_run):
+def process_post(row, config, posts_update_run):
     lgr.info('\n\nROW - Published: {}, Id: {}'.format(row.published, row.id))
 
     row_last_edited = make_aware(datetime.fromtimestamp(int(row.get('last_edited_time')) / 1000))
@@ -206,7 +206,6 @@ def process_post(row,config,posts_update_run):
     # break # :)
 
 
-
 @shared_task
 def sync_page(url):
     site_id = 1
@@ -214,7 +213,7 @@ def sync_page(url):
 
     try:
         client = NotionClient(
-            token_v2= config.token or settings.TOKEN_V2,
+            token_v2=config.token or settings.TOKEN_V2,
             monitor=False
         )
     except ConnectionError as e:
@@ -224,8 +223,7 @@ def sync_page(url):
     post_block = client.get_block(url)
     lgr.info(post_block)
     posts_update_run = timezone.now()
-    process_post(post_block,config,posts_update_run)
-
+    process_post(post_block, config, posts_update_run)
 
 
 @shared_task
@@ -235,7 +233,7 @@ def sync_all():
 
     try:
         client = NotionClient(
-            token_v2= config.token or settings.TOKEN_V2,
+            token_v2=config.token or settings.TOKEN_V2,
             monitor=False
         )
     except ConnectionError as e:
@@ -256,11 +254,7 @@ def sync_all():
     posts_update_run = timezone.now()
     # List all the records in the collection
     for row in cv.collection.get_rows():
-        process_post(row,config,posts_update_run)
+        process_post(row, config, posts_update_run)
 
     # delete posts not existing on notion
     # todo Post.objects.filter(notion_updated_run__lt=posts_update_run).delete()
-
-
-
-
