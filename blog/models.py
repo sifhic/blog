@@ -6,7 +6,6 @@ from blog.unique_slug import unique_slugify
 from django.contrib.postgres.fields import JSONField
 
 
-
 class Category(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100)
@@ -21,7 +20,7 @@ class Category(models.Model):
     def save(self, *args, **kwargs):
         if not self.id:
             # Newly created object, so set slug
-            unique_slugify(self, self.name,self.site)
+            unique_slugify(self, self.name, self.site)
 
         super(Category, self).save(*args, **kwargs)
 
@@ -39,11 +38,13 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
+
 import markdown
 from django.template.loader import render_to_string
 from pygments import highlight
 
 from pygments.formatters import HtmlFormatter
+
 
 class Block(models.Model):
     TEXT = 1
@@ -60,25 +61,24 @@ class Block(models.Model):
     COLUMN_BLOCK = 12
 
     BLOCK_CHOICES = (
-        (TEXT,'TEXT'),
-        (DIVIDER,'DIVIDER'),
-        (BULLETED_LIST,'BULLETED LIST'),
-        (IMAGE,'IMAGE'),
-        (QUOTE,'QUOTE'),
-        (HEADER,'HEADER'),
-        (SUB_HEADER,'SUB HEADER'),
-        (SUB_SUB_HEADER,'SUB SUB HEADER'),
-        (CODE,'CODE'),
-        (TODO,'TODO'),
-        (COLUMN_LIST_BLOCK,'ColumnListBlock'),
-        (COLUMN_BLOCK,'ColumnBlock'),
+        (TEXT, 'TEXT'),
+        (DIVIDER, 'DIVIDER'),
+        (BULLETED_LIST, 'BULLETED LIST'),
+        (IMAGE, 'IMAGE'),
+        (QUOTE, 'QUOTE'),
+        (HEADER, 'HEADER'),
+        (SUB_HEADER, 'SUB HEADER'),
+        (SUB_SUB_HEADER, 'SUB SUB HEADER'),
+        (CODE, 'CODE'),
+        (TODO, 'TODO'),
+        (COLUMN_LIST_BLOCK, 'ColumnListBlock'),
+        (COLUMN_BLOCK, 'ColumnBlock'),
     )
 
-
-    type = models.PositiveSmallIntegerField(choices=BLOCK_CHOICES,default=TEXT)
+    type = models.PositiveSmallIntegerField(choices=BLOCK_CHOICES, default=TEXT)
     config = JSONField(default=dict)
 
-    children = models.ManyToManyField('self',symmetrical=False)
+    children = models.ManyToManyField('self', symmetrical=False)
 
     def child_blocks(self):
         return self.children.order_by('id')
@@ -90,23 +90,23 @@ class Block(models.Model):
     def rendered(self):
         if self.type == Block.BULLETED_LIST:
             rendered = render_to_string('blog/post/blocks/bulleted-list.html', {'item': self.content})
-            return  rendered
+            return rendered
 
         elif self.type == Block.TEXT:
             return markdown.markdown(self.content) if len(self.content) else '<p><br></p>'
 
         elif self.type == Block.COLUMN_LIST_BLOCK:
-            rendered = render_to_string('blog/post/blocks/column-list-block.html', {'block':self})
+            rendered = render_to_string('blog/post/blocks/column-list-block.html', {'block': self})
             return rendered
 
         elif self.type == Block.COLUMN_BLOCK:
-            rendered = render_to_string('blog/post/blocks/column-block.html', {'block':self})
+            rendered = render_to_string('blog/post/blocks/column-block.html', {'block': self})
             return rendered
 
         elif self.type == Block.TODO:
             rendered = render_to_string('blog/post/blocks/todo.html', {
                 'item': self.content,
-                'checked':self.config['checked']
+                'checked': self.config['checked']
             })
             return rendered
 
@@ -141,33 +141,34 @@ class Block(models.Model):
 
             return rendered
 
-        return '<strong style="color:red">{}</strong>'.format( self.get_type_display())
+        return '<strong style="color:red">{}</strong>'.format(self.get_type_display())
 
     def __str__(self):
         return '{}'.format(self.get_type_display())
 
+
 class Post(models.Model):
     def __str__(self):
-        return self.heading
+        return self.heading or 'Untitled'
 
     creator = models.ForeignKey(
         get_user_model(),
         on_delete=models.CASCADE
     )
     heading = models.CharField(max_length=200)
-    sub_heading = models.CharField(max_length=300,null=True,blank=True)
-    slug = models.SlugField(max_length=100) # editable=False
+    sub_heading = models.CharField(max_length=300, null=True, blank=True)
+    slug = models.SlugField(max_length=100)  # editable=False
 
-    body = models.ManyToManyField(Block,blank=True)
+    body = models.ManyToManyField(Block, blank=True)
 
-    category = models.ForeignKey(Category,on_delete=models.CASCADE,null=True,blank=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True)
     is_published = models.BooleanField(default=False)
     featured_image = models.ImageField(upload_to='featured_images', blank=True)
     created_at = models.DateTimeField('date created', auto_now_add=True)
     updated_at = models.DateTimeField('date updated', auto_now=True)
 
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
-    tags = models.ManyToManyField(Tag,blank=True)
+    tags = models.ManyToManyField(Tag, blank=True)
 
     class Meta:
         unique_together = (("site", "slug"),)
@@ -178,7 +179,7 @@ class Post(models.Model):
     def save(self, *args, **kwargs):
         if not self.id:
             # Newly created object, so set slug
-            unique_slugify(self, self.heading,self.site)
+            unique_slugify(self, self.heading, self.site)
 
         super(Post, self).save(*args, **kwargs)
 
@@ -192,11 +193,11 @@ class Contact(models.Model):
 
 
 class Comment(models.Model):
-    post = models.ForeignKey(Post,on_delete=models.CASCADE)
-    creator = models.ForeignKey(Contact,on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    creator = models.ForeignKey(Contact, on_delete=models.CASCADE)
     text = models.TextField()
 
-    reply_to = models.ForeignKey('self', related_name='replies', null=True, blank=True,on_delete=models.CASCADE)
+    reply_to = models.ForeignKey('self', related_name='replies', null=True, blank=True, on_delete=models.CASCADE)
     created_at = models.DateTimeField('date commented', auto_now_add=True)
     updated_at = models.DateTimeField('date edited', auto_now=True)
 
@@ -214,4 +215,4 @@ class SiteProfile(models.Model):
 
 class Message(models.Model):
     site = models.OneToOneField(Site, on_delete=models.CASCADE)
-    sender = models.ForeignKey(Contact,on_delete=models.CASCADE)
+    sender = models.ForeignKey(Contact, on_delete=models.CASCADE)
