@@ -80,7 +80,8 @@ def settings_list(request):
             site = request.site
             site.name = form.cleaned_data['name']
             site.save()
-
+            
+            post.site = site
             post.save()
             lgr.info("Created New Post: {}".format(post))
         else:

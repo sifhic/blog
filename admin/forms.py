@@ -8,7 +8,7 @@ class SiteProfileForm(forms.ModelForm):
 
     class Meta:
         model = SiteProfile
-        exclude = []
+        exclude = ['site']
 
     def __init__(self, *args, **kwargs):
         super(SiteProfileForm, self).__init__(*args, **kwargs)
