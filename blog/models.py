@@ -74,9 +74,7 @@ class Block(models.Model):
         (COLUMN_BLOCK,'ColumnBlock'),
     )
 
-    notion_updated_run = models.DateTimeField('Notion date run', null=True,blank=True)
-    notion_updated_at = models.DateTimeField('Notion date updated', null=True,blank=True)
-    notion_reference = models.CharField(unique=True, blank=True, null=True, max_length=100)
+
     type = models.PositiveSmallIntegerField(choices=BLOCK_CHOICES,default=TEXT)
     config = JSONField(default=dict)
 
@@ -167,10 +165,6 @@ class Post(models.Model):
     featured_image = models.ImageField(upload_to='featured_images', blank=True)
     created_at = models.DateTimeField('date created', auto_now_add=True)
     updated_at = models.DateTimeField('date updated', auto_now=True)
-
-    notion_updated_run = models.DateTimeField('Notion date run', null=True,blank=True)
-    notion_updated_at = models.DateTimeField('Notion date updated', null=True,blank=True)
-    notion_reference = models.CharField(unique=True,blank=True,null=True,max_length=100)
 
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag,blank=True)
