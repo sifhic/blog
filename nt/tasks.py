@@ -33,9 +33,10 @@ from nt.models import Block, Config
 lgr = logging.getLogger(__name__)
 
 
-def parse_block(child, config):
-    children_update_run = timezone.now()
+def parse_block(child, config,children_update_run):
+
     save = True
+    new_block_nt_block = False
     child_last_edited = make_aware(datetime.fromtimestamp(int(child.get('last_edited_time')) / 1000))
 
     try:
@@ -52,16 +53,14 @@ def parse_block(child, config):
     except BlogBlock.DoesNotExist:
         block = BlogBlock()
 
-        try:
-            block_nt_block = Block.objects.get(reference=child.id)
+        try:block_nt_block = Block.objects.get(reference=child.id)
         except Block.DoesNotExist:
             block_nt_block = Block()
             block_nt_block.reference = child.id
-            block_nt_block.block = block
+            block_nt_block.config = config
+            new_block_nt_block = True
 
-        block_nt_block.config = config
         block_nt_block.updated_run = children_update_run
-
     block_nt_block.updated_at = child_last_edited
 
     if isinstance(child, ColumnListBlock):
@@ -71,12 +70,12 @@ def parse_block(child, config):
         block.save()
         for column_block in child.children:
             lgr.info(column_block)
-            cb = parse_block(column_block, config)
+            cb = parse_block(column_block, config,children_update_run)
             block.children.add(cb)
 
             for column_block_child in column_block.children:
                 lgr.info(column_block_child)
-                cbc = parse_block(column_block_child, config)
+                cbc = parse_block(column_block_child, config,children_update_run)
                 cb.children.add(cbc)
 
     elif isinstance(child, ColumnBlock):
@@ -131,8 +130,15 @@ def parse_block(child, config):
         lgr.info(child)
         lgr.info('Unknown block type: {}'.format(type(child)))
 
-    if save: block.save()
-    block_nt_block.save()
+    if save:
+        block.save()
+
+    if new_block_nt_block:
+        block_nt_block.block = block
+        block_nt_block.save()
+    else:
+        block_nt_block.save()
+
     return block
 
 
@@ -197,13 +203,13 @@ def process_post(row, config, posts_update_run):
 
     # Retrieving Page content
     # Blocks
-
+    children_update_run = timezone.now()
     for child in row.children:
-        block = parse_block(child, config)
+        block = parse_block(child, config,children_update_run)
         post.body.add(block)
 
-    # BlogBlock.objects.filter(notion_updated_run__lt=children_update_run).delete()
-
+    deleted = BlogBlock.objects.filter(nt_block__updated_run__lt=children_update_run).delete()
+    lgr.info(deleted)
     # break # :)
 
 
