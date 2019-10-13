@@ -185,7 +185,7 @@ class Post(models.Model):
         super(Post, self).save(*args, **kwargs)
 
     def blocks(self):
-        return self.body.order_by('id')
+        return self.body.order_by('level')
 
 
 class Contact(models.Model):
