@@ -33,7 +33,7 @@ from nt.models import Block, Config
 lgr = logging.getLogger(__name__)
 
 
-def parse_block(child, config,children_update_run):
+def parse_block(child, config,children_update_run,level):
     save = True
     new_block_nt_block = False
     child_last_edited = make_aware(datetime.fromtimestamp(int(child.get('last_edited_time')) / 1000))
@@ -63,21 +63,28 @@ def parse_block(child, config,children_update_run):
         block_nt_block.updated_run = children_update_run
 
     block_nt_block.updated_at = child_last_edited
+    block.level = level
 
     if isinstance(child, ColumnListBlock):
         block.type = BlogBlock.COLUMN_LIST_BLOCK
         # todo save config
         save = False
         block.save()
+        column_block_level = 0
         for column_block in child.children:
             lgr.info(column_block)
-            cb = parse_block(column_block, config,children_update_run)
+            cb = parse_block(column_block, config,children_update_run,column_block_level)
             block.children.add(cb)
+            column_block_level+=1
 
+            column_block_child_level = 0
             for column_block_child in column_block.children:
                 lgr.info(column_block_child)
-                cbc = parse_block(column_block_child, config,children_update_run)
+                cbc = parse_block(column_block_child, config,children_update_run,column_block_child_level)
                 cb.children.add(cbc)
+                column_block_child_level += 1
+
+
     elif isinstance(child, ColumnBlock):
         block.type = BlogBlock.COLUMN_BLOCK
         # todo save config
@@ -207,8 +214,10 @@ def process_post(row, config, posts_update_run):
     # Retrieving Page content
     # Blocks
     children_update_run = timezone.now()
+    level = 0
     for child in row.children:
-        block = parse_block(child, config,children_update_run)
+        block = parse_block(child, config,children_update_run,level)
+        level += 1
         post.body.add(block)
 
     deleted = BlogBlock.objects.filter(nt_block__updated_run__lt=children_update_run).delete()

@@ -76,12 +76,13 @@ class Block(models.Model):
     )
 
     type = models.PositiveSmallIntegerField(choices=BLOCK_CHOICES, default=TEXT)
+    level = models.PositiveIntegerField(default=0)
     config = JSONField(default=dict)
 
     children = models.ManyToManyField('self', symmetrical=False)
 
     def child_blocks(self):
-        return self.children.order_by('id')
+        return self.children.order_by('level')
 
     @property
     def content(self):
