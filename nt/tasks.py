@@ -220,7 +220,8 @@ def process_post(row, config, posts_update_run):
         level += 1
         post.body.add(block)
 
-    deleted = BlogBlock.objects.filter(nt_block__updated_run__lt=children_update_run).delete()
+    # deleted = BlogBlock.objects.filter(nt_block__updated_run__lt=children_update_run).delete()
+    deleted = post.body.filter(nt_block__updated_run__lt=children_update_run).delete()
     lgr.info(deleted)
     # break # :)
 
