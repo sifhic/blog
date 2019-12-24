@@ -7,7 +7,7 @@ from django.contrib.sites.models import Site
 
 class Config(models.Model):
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
-    token = models.CharField(max_length=200,blank=True,null=True)
+    token = models.CharField(max_length=200,blank=True,null=True,help_text='token_v2 from cookies')
 
     def __str__(self):
         return '{}'.format(self.site)
