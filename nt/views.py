@@ -17,14 +17,10 @@ def config_view(request):
         form = ConfigForm(request.POST, instance=instance)
         lgr.debug(request.POST)
         if form.is_valid():
-            post = form.save(commit=False)
-
-            site = request.site
-            site.name = form.cleaned_data['name']
-            site.save()
-
-            post.save()
-            lgr.info("Created New Post: {}".format(post))
+            config = form.save(commit=False)
+            config.site = request.site
+            config.save()
+            lgr.info("Saved Config: {}".format(config))
         else:
             lgr.error(form.errors)
 
