@@ -59,6 +59,7 @@ class Block(models.Model):
     TODO = 10
     COLUMN_LIST_BLOCK = 11
     COLUMN_BLOCK = 12
+    NUMBERED_LIST_BLOCK = 13
 
     BLOCK_CHOICES = (
         (TEXT, 'TEXT'),
@@ -72,6 +73,7 @@ class Block(models.Model):
         (CODE, 'CODE'),
         (TODO, 'TODO'),
         (COLUMN_LIST_BLOCK, 'ColumnListBlock'),
+        (NUMBERED_LIST_BLOCK, 'NumberedListBlock'),
         (COLUMN_BLOCK, 'ColumnBlock'),
     )
 
@@ -98,6 +100,10 @@ class Block(models.Model):
 
         elif self.type == Block.COLUMN_LIST_BLOCK:
             rendered = render_to_string('blog/post/blocks/column-list-block.html', {'block': self})
+            return rendered
+
+        elif self.type == Block.NUMBERED_LIST_BLOCK:
+            rendered = render_to_string('blog/post/blocks/numbered-list-block.html', {'item': self.content})
             return rendered
 
         elif self.type == Block.COLUMN_BLOCK:

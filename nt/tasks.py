@@ -16,7 +16,8 @@ from notion.block import (
     CodeBlock,
     TodoBlock,
     ColumnListBlock,
-    ColumnBlock
+    ColumnBlock,
+    NumberedListBlock
 )
 from notion.client import NotionClient
 from requests.exceptions import ConnectionError
@@ -99,6 +100,10 @@ def parse_block(child, config,children_update_run,level):
         block.type = BlogBlock.DIVIDER
     elif isinstance(child, BulletedListBlock):
         block.type = BlogBlock.BULLETED_LIST
+        block.config = {}
+        block.config['content'] = child.title
+    elif isinstance(child, NumberedListBlock):
+        block.type = BlogBlock.NUMBERED_LIST_BLOCK
         block.config = {}
         block.config['content'] = child.title
     elif isinstance(child, ImageBlock):
