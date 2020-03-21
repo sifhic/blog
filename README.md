@@ -1,4 +1,4 @@
-# DjangoBlog
+# Django Blog
 a simple django blog. 
 
 ## Environment
@@ -17,5 +17,4 @@ a simple django blog.
 - Flatpages, using django flatpages framework 
 - Newsletters, allow users subscription by email and send newsletters about posts  
 - Pwa, works offline and can be added to Home Screen
-- Telegram Instant preview
 - Twitter Cards Support
