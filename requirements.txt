@@ -11,7 +11,7 @@ psycopg2-binary==2.7.4
 django-extensions==2.1.3
 
 
-celery==4.1.1
+celery==5.2.2
 kombu==4.5.0 # kombu==4.6.5 has issue https://github.com/celery/kombu/issues/1063
 # for python3.7 async is a reserved keyword
 # pip install --upgrade https://github.com/celery/celery/tarball/master
